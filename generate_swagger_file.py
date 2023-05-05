@@ -4,7 +4,7 @@ import yaml
 
 from fastapi.openapi.utils import get_openapi
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "app/api"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../app/api"))
 
 from main import app
 
