@@ -2,6 +2,8 @@ name: Generate Swagger File
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [generate-swagger-file]
 
 permissions:
   contents: write
