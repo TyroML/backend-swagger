@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../app/api"))
 from main import app
 
 
-with open('swagger.yaml', 'w') as f:
+with open('backend-swagger/swagger.yaml', 'w') as f:
     yaml.dump(get_openapi(
         title=app.title,
         version=app.version,
