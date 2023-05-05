@@ -3,6 +3,9 @@ name: Generate Swagger File
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   generate-swagger-json:
     runs-on: ubuntu-latest
