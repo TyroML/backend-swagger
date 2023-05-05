@@ -467,7 +467,7 @@ components:
       title: ValidationError
       type: object
 info:
-  description: Backend Service for the ML Platform TEEEST
+  description: Backend Service for the ML Platform
   title: Backend Service
   version: 0.1.0
 openapi: 3.0.2
