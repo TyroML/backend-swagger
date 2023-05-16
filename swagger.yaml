@@ -110,17 +110,9 @@ components:
           description: Model ID
           title: Id
           type: integer
-        image_tag:
-          description: Docker image tag
-          title: Image Tag
-          type: string
         name:
           description: Model name
           title: Name
-          type: string
-        source_path:
-          description: Path to the model source code
-          title: Source Path
           type: string
         status:
           allOf:
@@ -138,9 +130,7 @@ components:
       required:
       - name
       - description
-      - source_path
       - status
-      - image_tag
       - id
       - created_by
       - created_at
@@ -148,23 +138,58 @@ components:
       - updated_at
       title: Model
       type: object
+    ModelDetails:
+      properties:
+        artifact_uri:
+          description: Path to the model artifact
+          title: Artifact Uri
+          type: string
+        cpu_limit:
+          description: CPU limit
+          title: Cpu Limit
+          type: string
+        cpu_request:
+          description: CPU request
+          title: Cpu Request
+          type: string
+        id:
+          description: ModelDetails ID
+          title: Id
+          type: integer
+        image_tag:
+          description: Docker image tag
+          title: Image Tag
+          type: string
+        memory_limit:
+          description: Memory limit
+          title: Memory Limit
+          type: string
+        memory_request:
+          description: Memory request
+          title: Memory Request
+          type: string
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: integer
+        replicas:
+          description: Number of replicas
+          title: Replicas
+          type: integer
+      required:
+      - id
+      - model_id
+      title: ModelDetails
+      type: object
     PatchModel:
       properties:
         description:
           description: Model description
           title: Description
           type: string
-        image_tag:
-          description: Docker image tag
-          title: Image Tag
-          type: string
         name:
           description: Model name
           title: Name
-          type: string
-        source_path:
-          description: Path to the model source code
-          title: Source Path
           type: string
         status:
           allOf:
@@ -177,6 +202,38 @@ components:
       required:
       - updated_by
       title: PatchModel
+      type: object
+    PatchModelDetails:
+      properties:
+        artifact_uri:
+          description: Path to the model artifact
+          title: Artifact Uri
+          type: string
+        cpu_limit:
+          description: CPU limit
+          title: Cpu Limit
+          type: string
+        cpu_request:
+          description: CPU request
+          title: Cpu Request
+          type: string
+        image_tag:
+          description: Docker image tag
+          title: Image Tag
+          type: string
+        memory_limit:
+          description: Memory limit
+          title: Memory Limit
+          type: string
+        memory_request:
+          description: Memory request
+          title: Memory Request
+          type: string
+        replicas:
+          description: Number of replicas
+          title: Replicas
+          type: integer
+      title: PatchModelDetails
       type: object
     Pool:
       properties:
@@ -270,17 +327,9 @@ components:
           description: Model description
           title: Description
           type: string
-        image_tag:
-          description: Docker image tag
-          title: Image Tag
-          type: string
         name:
           description: Model name
           title: Name
-          type: string
-        source_path:
-          description: Path to the model source code
-          title: Source Path
           type: string
         status:
           allOf:
@@ -289,9 +338,7 @@ components:
       required:
       - name
       - description
-      - source_path
       - status
-      - image_tag
       - created_by
       title: PutModel
       type: object
@@ -938,6 +985,97 @@ paths:
       summary: Patch Model
       tags:
       - model
+  /model/{model_id}/details/:
+    get:
+      description: 'Retrieves the information of a specific model_details by ID.
+
+
+        :param model_id: model ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "ModelDetails not found!" message
+
+        if the specified gate ID does not exist in the database.
+
+
+        :return: the model_details data corresponding to the given ID'
+      operationId: get_model_details_by_id_model__model_id__details__get
+      parameters:
+      - in: path
+        name: model_id
+        required: true
+        schema:
+          title: Model Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelDetails'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Model Details By Id
+      tags:
+      - model
+      - model-details
+    patch:
+      description: 'Updates the information of an existing model_details
+
+        and returns the model_details information.
+
+
+        :param model_id: model ID
+
+        :param model_details_data: the information of the model_details to be updated.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "ModelDetails not found!" message
+
+        if the specified model_details does not exist in the database.
+
+
+        :return: the model_details data corresponding to the given ID'
+      operationId: patch_model_details_model__model_id__details__patch
+      parameters:
+      - in: path
+        name: model_id
+        required: true
+        schema:
+          title: Model Id
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchModelDetails'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelDetails'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Patch Model Details
+      tags:
+      - model
+      - model-details
   /pool/:
     get:
       description: 'Retrieves a list of pools with pagination options (skip, limit).
