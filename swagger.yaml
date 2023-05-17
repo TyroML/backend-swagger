@@ -130,12 +130,12 @@ components:
       required:
       - name
       - description
-      - status
       - id
       - created_by
       - created_at
       - updated_by
       - updated_at
+      - status
       title: Model
       type: object
     ModelDetails:
@@ -191,10 +191,6 @@ components:
           description: Model name
           title: Name
           type: string
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Status'
-          description: Model status
         updated_by:
           description: User ID of the last updater
           title: Updated By
@@ -331,14 +327,9 @@ components:
           description: Model name
           title: Name
           type: string
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Status'
-          description: Model status
       required:
       - name
       - description
-      - status
       - created_by
       title: PutModel
       type: object
@@ -983,6 +974,88 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Patch Model
+      tags:
+      - model
+  /model/{model_id}/activate:
+    post:
+      description: 'Activates the model with the given ID.
+
+
+        :param model_id: model ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Model not found!"
+
+        :raise HTTPException: 409 status code with "Model already active!"
+
+        :raise HTTPException: 404 status code with "Model details not found!"
+
+        :raise HTTPException: 406 status code with "Model details are not complete!"
+
+
+        :return: a json with a "detail" key indicating success'
+      operationId: activate_model_model__model_id__activate_post
+      parameters:
+      - in: path
+        name: model_id
+        required: true
+        schema:
+          title: Model Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Activate Model
+      tags:
+      - model
+  /model/{model_id}/deactivate:
+    post:
+      description: 'Deactivates the model with the given ID.
+
+
+        :param model_id: model ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Model not found!" message
+
+        :raise HTTPException: 409 status code with "Model already inactive!" message
+
+
+        :return: a json with a "detail" key indicating success'
+      operationId: deactivate_model_model__model_id__deactivate_post
+      parameters:
+      - in: path
+        name: model_id
+        required: true
+        schema:
+          title: Model Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Deactivate Model
       tags:
       - model
   /model/{model_id}/details/:
