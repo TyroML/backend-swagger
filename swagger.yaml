@@ -57,8 +57,6 @@ components:
           title: Updated By
           type: integer
       required:
-      - name
-      - description
       - updated_by
       title: GatePatch
       type: object
@@ -181,25 +179,7 @@ components:
       - model_id
       title: ModelDetails
       type: object
-    PatchModel:
-      properties:
-        description:
-          description: Model description
-          title: Description
-          type: string
-        name:
-          description: Model name
-          title: Name
-          type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
-      required:
-      - updated_by
-      title: PatchModel
-      type: object
-    PatchModelDetails:
+    ModelDetailsPatch:
       properties:
         artifact_uri:
           description: Path to the model artifact
@@ -229,7 +209,45 @@ components:
           description: Number of replicas
           title: Replicas
           type: integer
-      title: PatchModelDetails
+      title: ModelDetailsPatch
+      type: object
+    ModelPatch:
+      properties:
+        description:
+          description: Model description
+          title: Description
+          type: string
+        name:
+          description: Model name
+          title: Name
+          type: string
+        updated_by:
+          description: User ID of the last updater
+          title: Updated By
+          type: integer
+      required:
+      - updated_by
+      title: ModelPatch
+      type: object
+    ModelPut:
+      properties:
+        created_by:
+          description: User ID of the creator
+          title: Created By
+          type: integer
+        description:
+          description: Model description
+          title: Description
+          type: string
+        name:
+          description: Model name
+          title: Name
+          type: string
+      required:
+      - name
+      - description
+      - created_by
+      title: ModelPut
       type: object
     Pool:
       properties:
@@ -312,26 +330,6 @@ components:
       - description
       - created_by
       title: PoolPut
-      type: object
-    PutModel:
-      properties:
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
-        description:
-          description: Model description
-          title: Description
-          type: string
-        name:
-          description: Model name
-          title: Name
-          type: string
-      required:
-      - name
-      - description
-      - created_by
-      title: PutModel
       type: object
     Status:
       description: An enumeration.
@@ -752,6 +750,175 @@ paths:
       summary: Patch Gate
       tags:
       - gate
+  /gate/{gate_id}/pool:
+    get:
+      description: 'Retrieves a list of gates with pagination options (skip, limit).
+
+
+        :param gate_id: the gate ID to retrieve
+
+        :param db: Database session
+
+        :param skip: (optional) the number of records to skip (default: 0)
+
+        :param limit: (optional) the maximum number of records to retrieve (default:
+        100)
+
+
+        :raise HTTPException: 404 status code with "Pools not found!" message
+
+        if gate has no pools.
+
+
+        :return: a list of gate pools data, where skip < number of pools < limit'
+      operationId: get_pools_gate__gate_id__pool_get
+      parameters:
+      - in: path
+        name: gate_id
+        required: true
+        schema:
+          title: Gate Id
+          type: integer
+      - in: query
+        name: skip
+        required: false
+        schema:
+          default: 0
+          minimum: 0.0
+          title: Skip
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          minimum: 0.0
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pool'
+                title: Response Get Pools Gate  Gate Id  Pool Get
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Pools
+      tags:
+      - gate
+  /gate/{gate_id}/pool/{pool_id}:
+    delete:
+      description: 'Deletes pool from gate.
+
+
+        :param gate_id: The id of the gate from which to delet.
+
+        :param pool_id: The id of the pool to be deleted.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Gate not found!" message
+
+        if the specified gate ID does not exist in the database.
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: JSON response with status code 200'
+      operationId: delete_pool_gate_gate__gate_id__pool__pool_id__delete
+      parameters:
+      - in: path
+        name: gate_id
+        required: true
+        schema:
+          title: Gate Id
+          type: integer
+      - in: path
+        name: pool_id
+        required: true
+        schema:
+          title: Pool Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Pool Gate
+      tags:
+      - gate
+    put:
+      description: 'Adds existing pool to gate.
+
+
+        :param gate_id: the gate ID to retrieve
+
+        :param pool_id: the pool ID to retrieve
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Gate not found!" message
+
+        if the specified gate ID does not exist in the database.
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+        :raise HTTPException: 409 status code with "Pool already in gate!"
+
+        message if the specified pool ID already in gate.
+
+
+        :return: JSON response with status code 201'
+      operationId: put_pool_gate_gate__gate_id__pool__pool_id__put
+      parameters:
+      - in: path
+        name: gate_id
+        required: true
+        schema:
+          title: Gate Id
+          type: integer
+      - in: path
+        name: pool_id
+        required: true
+        schema:
+          title: Pool Id
+          type: integer
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Put Pool Gate
+      tags:
+      - gate
   /model/:
     get:
       description: 'Retrieves a list of models with pagination options (skip, limit).
@@ -829,7 +996,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PutModel'
+              $ref: '#/components/schemas/ModelPut'
         required: true
       responses:
         '201':
@@ -958,7 +1125,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchModel'
+              $ref: '#/components/schemas/ModelPatch'
         required: true
       responses:
         '200':
@@ -1130,7 +1297,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchModelDetails'
+              $ref: '#/components/schemas/ModelDetailsPatch'
         required: true
       responses:
         '200':
