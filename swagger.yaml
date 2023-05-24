@@ -114,7 +114,7 @@ components:
           type: string
         status:
           allOf:
-          - $ref: '#/components/schemas/Status'
+          - $ref: '#/components/schemas/ModelStatus'
           description: Model status
         updated_at:
           description: Last update date
@@ -249,6 +249,13 @@ components:
       - created_by
       title: ModelPut
       type: object
+    ModelStatus:
+      description: An enumeration.
+      enum:
+      - active
+      - inactive
+      title: ModelStatus
+      type: string
     Pool:
       properties:
         created_at:
@@ -291,6 +298,77 @@ components:
       - updated_at
       title: Pool
       type: object
+    PoolDeleteModel:
+      properties:
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: integer
+        pool_id:
+          description: Pool ID
+          title: Pool Id
+          type: integer
+      required:
+      - pool_id
+      - model_id
+      title: PoolDeleteModel
+      type: object
+    PoolModel:
+      properties:
+        mode:
+          allOf:
+          - $ref: '#/components/schemas/PoolModelMode'
+          description: Model mode
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: integer
+        pool_id:
+          description: Pool ID
+          title: Pool Id
+          type: integer
+      required:
+      - pool_id
+      - model_id
+      - mode
+      title: PoolModel
+      type: object
+    PoolModelDetailed:
+      properties:
+        description:
+          description: Model description
+          title: Description
+          type: string
+        mode:
+          allOf:
+          - $ref: '#/components/schemas/PoolModelMode'
+          description: Model mode
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: integer
+        name:
+          description: Model name
+          title: Name
+          type: string
+        pool_id:
+          description: Pool ID
+          title: Pool Id
+          type: integer
+      required:
+      - pool_id
+      - model_id
+      - name
+      - description
+      - mode
+      title: PoolModelDetailed
+      type: object
+    PoolModelMode:
+      description: An enumeration.
+      enum:
+      - production
+      - staging
+      title: PoolModelMode
     PoolPatch:
       properties:
         description:
@@ -310,6 +388,25 @@ components:
       - description
       - updated_by
       title: PoolPatch
+      type: object
+    PoolPatchModel:
+      properties:
+        mode:
+          allOf:
+          - $ref: '#/components/schemas/PoolModelMode'
+          description: Model mode
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: integer
+        pool_id:
+          description: Pool ID
+          title: Pool Id
+          type: integer
+      required:
+      - pool_id
+      - model_id
+      title: PoolPatchModel
       type: object
     PoolPut:
       properties:
@@ -331,13 +428,26 @@ components:
       - created_by
       title: PoolPut
       type: object
-    Status:
-      description: An enumeration.
-      enum:
-      - active
-      - inactive
-      title: Status
-      type: string
+    PoolPutModel:
+      properties:
+        mode:
+          allOf:
+          - $ref: '#/components/schemas/PoolModelMode'
+          description: Model mode
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: integer
+        pool_id:
+          description: Pool ID
+          title: Pool Id
+          type: integer
+      required:
+      - pool_id
+      - model_id
+      - mode
+      title: PoolPutModel
+      type: object
     Test:
       properties:
         created_at:
@@ -1575,6 +1685,183 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Patch Pool
+      tags:
+      - pool
+  /pool/{pool_id}/model:
+    get:
+      description: 'Retrieves a list of models in a pool.
+
+
+        :param db: Database session
+
+        :param pool_id: the pool ID to retrieve models from
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: a list of models in the pool'
+      operationId: get_pool_models_pool__pool_id__model_get
+      parameters:
+      - in: path
+        name: pool_id
+        required: true
+        schema:
+          title: Pool Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PoolModelDetailed'
+                title: Response Get Pool Models Pool  Pool Id  Model Get
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Pool Models
+      tags:
+      - pool
+  /pool/{pool_id}/model/{model_id}:
+    delete:
+      description: 'Deletes the pool with the given ID.
+
+
+        :param pool_model_data: the information of the model in the pool to be deleted.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+        :raise HTTPException: 404 status code with "Model not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: a json with a "detail" key indicating success'
+      operationId: delete_pool_model_pool__pool_id__model__model_id__delete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolDeleteModel'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Pool Model
+      tags:
+      - pool
+    patch:
+      description: 'Updates the information of an existing pool with the provided
+        data and
+
+        returns the updated pool information.
+
+
+        :param pool_model_data: the information of the model in the pool to be patched.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Model not found in the pool!"
+        message
+
+        if the specified model ID does not exist in the pool database.
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+        :raise HTTPException: 404 status code with "Model not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: the updated pool record'
+      operationId: patch_pool_model_pool__pool_id__model__model_id__patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolPatchModel'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolModel'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Patch Pool Model
+      tags:
+      - pool
+    put:
+      description: 'Inserts a model into a given pool.
+
+
+        :param pool_model_data: the information about the pool and model.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+        :raise HTTPException: 404 status code with "Model not found!" message
+
+        if the specified model ID does not exist in the database.
+
+
+        :return: the newly-inserted pool record'
+      operationId: put_pool_model_pool__pool_id__model__model_id__put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolPutModel'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolModel'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Put Pool Model
       tags:
       - pool
   /test/:
