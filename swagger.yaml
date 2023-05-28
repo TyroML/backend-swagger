@@ -1668,7 +1668,7 @@ paths:
       summary: Patch Pool
       tags:
       - pool
-  /pool/{pool_id}/model:
+  /pool/{pool_id}/model/:
     get:
       description: 'Retrieves a list of models in a pool.
 
@@ -1684,7 +1684,7 @@ paths:
 
 
         :return: a list of models in the pool'
-      operationId: get_pool_models_pool__pool_id__model_get
+      operationId: get_pool_models_pool__pool_id__model__get
       parameters:
       - in: path
         name: pool_id
@@ -1699,7 +1699,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/PoolModelDetailed'
-                title: Response Get Pool Models Pool  Pool Id  Model Get
+                title: Response Get Pool Models Pool  Pool Id  Model  Get
                 type: array
           description: Successful Response
         '422':
@@ -1710,6 +1710,7 @@ paths:
           description: Validation Error
       summary: Get Pool Models
       tags:
+      - pool
       - pool-model
   /pool/{pool_id}/model/{model_id}:
     delete:
@@ -1767,6 +1768,7 @@ paths:
           description: Validation Error
       summary: Delete Pool Model
       tags:
+      - pool
       - pool-model
     patch:
       description: 'Updates the information of an existing pool with the provided
@@ -1834,6 +1836,7 @@ paths:
           description: Validation Error
       summary: Patch Pool Model
       tags:
+      - pool
       - pool-model
     put:
       description: 'Inserts a model into a given pool.
@@ -1897,6 +1900,7 @@ paths:
           description: Validation Error
       summary: Put Pool Model
       tags:
+      - pool
       - pool-model
   /test/:
     get:
