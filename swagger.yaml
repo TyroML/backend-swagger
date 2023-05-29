@@ -841,7 +841,7 @@ paths:
       summary: Patch Gate
       tags:
       - gate
-  /gate/{gate_id}/pool:
+  /gate/{gate_id}/pool/:
     get:
       description: 'Retrieves a list of gates with pagination options (skip, limit).
 
@@ -862,7 +862,7 @@ paths:
 
 
         :return: a list of gate pools data, where skip < number of pools < limit'
-      operationId: get_pools_gate__gate_id__pool_get
+      operationId: get_pools_gate__gate_id__pool__get
       parameters:
       - in: path
         name: gate_id
@@ -893,7 +893,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/Pool'
-                title: Response Get Pools Gate  Gate Id  Pool Get
+                title: Response Get Pools Gate  Gate Id  Pool  Get
                 type: array
           description: Successful Response
         '422':
@@ -905,6 +905,7 @@ paths:
       summary: Get Pools
       tags:
       - gate
+      - gate-pool
   /gate/{gate_id}/pool/{pool_id}:
     delete:
       description: 'Deletes pool from gate.
@@ -956,6 +957,7 @@ paths:
       summary: Delete Pool Gate
       tags:
       - gate
+      - gate-pool
     put:
       description: 'Adds existing pool to gate.
 
@@ -1010,6 +1012,7 @@ paths:
       summary: Put Pool Gate
       tags:
       - gate
+      - gate-pool
   /model/:
     get:
       description: 'Retrieves a list of models with pagination options (skip, limit).
