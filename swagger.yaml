@@ -614,6 +614,18 @@ paths:
                 type: object
           description: Successful Response
       summary: Root
+  /auth:
+    get:
+      operationId: auth_auth_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: Auth
+      tags:
+      - login
   /gate/:
     get:
       description: 'Retrieves a list of gates with pagination options (skip, limit).
@@ -651,6 +663,13 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -687,6 +706,14 @@ paths:
 
         :return: the newly-inserted gate record'
       operationId: put_gate_gate__put
+      parameters:
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -733,6 +760,13 @@ paths:
         schema:
           title: Gate Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -771,6 +805,13 @@ paths:
         schema:
           title: Gate Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -819,6 +860,13 @@ paths:
         schema:
           title: Gate Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -886,6 +934,13 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -942,6 +997,13 @@ paths:
         schema:
           title: Pool Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -997,6 +1059,13 @@ paths:
         schema:
           title: Pool Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '201':
           content:
@@ -1013,6 +1082,18 @@ paths:
       tags:
       - gate
       - gate-pool
+  /login:
+    get:
+      operationId: login_login_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: Login
+      tags:
+      - login
   /model/:
     get:
       description: 'Retrieves a list of models with pagination options (skip, limit).
@@ -1050,6 +1131,13 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1086,6 +1174,14 @@ paths:
 
         :return: the newly-inserted model record'
       operationId: put_model_model__put
+      parameters:
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1132,6 +1228,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1170,6 +1273,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1215,6 +1325,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1265,6 +1382,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1306,6 +1430,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1345,6 +1476,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1384,6 +1522,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1428,6 +1573,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1488,6 +1640,13 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1519,6 +1678,14 @@ paths:
 
         :return: the newly-inserted pool record'
       operationId: put_pool_pool__put
+      parameters:
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1565,6 +1732,13 @@ paths:
         schema:
           title: Pool Id
           type: string
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1603,6 +1777,13 @@ paths:
         schema:
           title: Pool Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1649,6 +1830,13 @@ paths:
         schema:
           title: Pool Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1695,6 +1883,13 @@ paths:
         schema:
           title: Pool Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1757,6 +1952,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1818,6 +2020,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1882,6 +2091,13 @@ paths:
         schema:
           title: Model Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1942,6 +2158,13 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -1978,6 +2201,14 @@ paths:
 
         :return: the newly-inserted test record'
       operationId: put_test_test__put
+      parameters:
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -2024,6 +2255,13 @@ paths:
         schema:
           title: Test Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -2062,6 +2300,13 @@ paths:
         schema:
           title: Test Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -2108,6 +2353,13 @@ paths:
         schema:
           title: Test Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -2167,6 +2419,13 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -2203,6 +2462,14 @@ paths:
 
         :return: the newly-inserted user record'
       operationId: put_user_user__put
+      parameters:
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -2249,6 +2516,13 @@ paths:
         schema:
           title: User Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -2287,6 +2561,13 @@ paths:
         schema:
           title: User Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       responses:
         '200':
           content:
@@ -2335,6 +2616,13 @@ paths:
         schema:
           title: User Id
           type: integer
+      - in: query
+        name: auto_error
+        required: false
+        schema:
+          default: true
+          title: Auto Error
+          type: boolean
       requestBody:
         content:
           application/json:
