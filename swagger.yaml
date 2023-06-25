@@ -78,6 +78,81 @@ components:
           type: array
       title: HTTPValidationError
       type: object
+    MlflowServer:
+      properties:
+        created_at:
+          description: Creation date
+          format: date-time
+          title: Created At
+          type: string
+        created_by:
+          description: User ID of the creator
+          title: Created By
+          type: integer
+        id:
+          description: MLflow server ID
+          title: Id
+          type: integer
+        name:
+          description: MLflow server name
+          title: Name
+          type: string
+        tracking_uri:
+          description: MLflow server tracking uri
+          title: Tracking Uri
+          type: string
+        updated_at:
+          description: Last update date
+          format: date-time
+          title: Updated At
+          type: string
+        updated_by:
+          description: User ID of the last updater
+          title: Updated By
+          type: integer
+      required:
+      - name
+      - tracking_uri
+      - id
+      - created_by
+      - created_at
+      - updated_by
+      - updated_at
+      title: MlflowServer
+      type: object
+    MlflowServerPatch:
+      properties:
+        description:
+          description: MLflow server description
+          title: Description
+          type: string
+        name:
+          description: MLflow server name
+          title: Name
+          type: string
+        tracking_uri:
+          description: MLflow server tracking uri
+          title: Tracking Uri
+          type: string
+      required:
+      - tracking_uri
+      title: MlflowServerPatch
+      type: object
+    MlflowServerPut:
+      properties:
+        name:
+          description: MLflow server name
+          title: Name
+          type: string
+        tracking_uri:
+          description: MLflow server tracking uri
+          title: Tracking Uri
+          type: string
+      required:
+      - name
+      - tracking_uri
+      title: MlflowServerPut
+      type: object
     Model:
       properties:
         created_at:
@@ -155,6 +230,10 @@ components:
           description: Memory request
           title: Memory Request
           type: string
+        mlflow_server_id:
+          description: MLflow server ID
+          title: Mlflow Server Id
+          type: integer
         model_id:
           description: Model ID
           title: Model Id
@@ -194,6 +273,10 @@ components:
           description: Memory request
           title: Memory Request
           type: string
+        mlflow_server_id:
+          description: MLflow server ID
+          title: Mlflow Server Id
+          type: integer
         replicas:
           description: Number of replicas
           title: Replicas
@@ -1020,6 +1103,249 @@ paths:
       summary: Login
       tags:
       - login
+  /mlflow-server/:
+    get:
+      description: 'Retrieves a list of mlflow server with pagination options (skip,
+        limit).
+
+
+        :param db: Database session
+
+        :param skip: (optional) the number of records to skip (default: 0)
+
+        :param limit: (optional) the maximum number of records to retrieve (default:
+        100)
+
+
+        :raise HTTPException: 404 status code with "Mlflow server not found!" message
+
+        if the specified range of gate ID''s does not exist in the database.
+
+
+        :return: a list of mlflow server data, where skip < mlflow_server_id < limit'
+      operationId: get_mlflow_servers_mlflow_server__get
+      parameters:
+      - in: query
+        name: skip
+        required: false
+        schema:
+          default: 0
+          minimum: 0.0
+          title: Skip
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          minimum: 0.0
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MlflowServer'
+                title: Response Get Mlflow Servers Mlflow Server  Get
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Get Mlflow Servers
+      tags:
+      - mlflow-server
+    put:
+      description: 'Creates a new mlflow server with the given information
+
+        and returns the mlflow server information.
+
+
+        :param mlflow_server_data: the information of the new mlflow server to be
+        created.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 409 status code with "Name already registered"
+
+        message if the provided name for mlflow server already exists in the database
+
+
+        :return: the newly-inserted mlflow server record'
+      operationId: put_mlflow_server_mlflow_server__put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MlflowServerPut'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MlflowServer'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
+      summary: Put Mlflow Server
+      tags:
+      - mlflow-server
+  /mlflow-server/{mlflow_server_id}:
+    delete:
+      description: 'Deletes the mlflow server with the specified email.
+
+
+        :param id: The id of the mlflow server to be deleted.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Mlflow server not found!" message
+
+        if the specified mlflow server ID does not exist in the database.
+
+
+        :return: the updated mlflow server record'
+      operationId: delete_mlflow_server_mlflow_server__mlflow_server_id__delete
+      parameters:
+      - in: path
+        name: mlflow_server_id
+        required: true
+        schema:
+          title: Mlflow Server Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Delete Mlflow Server
+      tags:
+      - mlflow-server
+    get:
+      description: 'Retrieves the information of a specific mlflow server by ID.
+
+
+        :param mlflow_server_id: the mlflow server ID to retrieve
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Mlflow server not found!" message
+
+        if the specified gate ID does not exist in the database.
+
+
+        :return: the mlflow server data corresponding to the given ID'
+      operationId: get_mlflow_server_mlflow_server__mlflow_server_id__get
+      parameters:
+      - in: path
+        name: mlflow_server_id
+        required: true
+        schema:
+          title: Mlflow Server Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MlflowServer'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Get Mlflow Server
+      tags:
+      - mlflow-server
+    patch:
+      description: 'Updates the information of an existing mlflow server with the
+        provided data and
+
+        returns the updated mlflow server information.
+
+
+        :param mlflow_server_id: the mlflow server ID to patch
+
+        :param mlflow_server_data: the information of the new mlflow server to be
+        created.
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Mlflow server not found!" message
+
+        if the specified mlflow server ID does not exist in the database.
+
+        :raise HTTPException: 409 status code with "Name already registered"
+
+        message if the provided name for mlflow server already exists in the database
+
+
+        :return: the updated mlflow server record'
+      operationId: patch_mlflow_server_mlflow_server__mlflow_server_id__patch
+      parameters:
+      - in: path
+        name: mlflow_server_id
+        required: true
+        schema:
+          title: Mlflow Server Id
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MlflowServerPatch'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MlflowServer'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
+      summary: Patch Mlflow Server
+      tags:
+      - mlflow-server
   /model/:
     get:
       description: 'Retrieves a list of models with pagination options (skip, limit).
