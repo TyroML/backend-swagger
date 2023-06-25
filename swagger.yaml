@@ -52,20 +52,10 @@ components:
           description: Gate name
           title: Name
           type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
-      required:
-      - updated_by
       title: GatePatch
       type: object
     GatePut:
       properties:
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
         description:
           description: Gate surname
           title: Description
@@ -77,7 +67,6 @@ components:
       required:
       - name
       - description
-      - created_by
       title: GatePut
       type: object
     HTTPValidationError:
@@ -221,20 +210,10 @@ components:
           description: Model name
           title: Name
           type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
-      required:
-      - updated_by
       title: ModelPatch
       type: object
     ModelPut:
       properties:
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
         description:
           description: Model description
           title: Description
@@ -246,7 +225,6 @@ components:
       required:
       - name
       - description
-      - created_by
       title: ModelPut
       type: object
     ModelStatus:
@@ -374,14 +352,6 @@ components:
           description: Pool name
           title: Name
           type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
-      required:
-      - name
-      - description
-      - updated_by
       title: PoolPatch
       type: object
     PoolPatchModel:
@@ -398,10 +368,6 @@ components:
       type: object
     PoolPut:
       properties:
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
         description:
           description: Pool description
           title: Description
@@ -413,7 +379,6 @@ components:
       required:
       - name
       - description
-      - created_by
       title: PoolPut
       type: object
     PoolPutModel:
@@ -483,20 +448,10 @@ components:
           description: Test name
           title: Name
           type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
-      required:
-      - updated_by
       title: TestPatch
       type: object
     TestPut:
       properties:
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
         description:
           description: Test description
           title: Description
@@ -508,7 +463,6 @@ components:
       required:
       - name
       - description
-      - created_by
       title: TestPut
       type: object
     User:
@@ -593,6 +547,10 @@ components:
       - type
       title: ValidationError
       type: object
+  securitySchemes:
+    JWTBearer:
+      scheme: bearer
+      type: http
 info:
   description: Backend Service for the ML Platform
   title: Backend Service
@@ -663,13 +621,6 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -686,6 +637,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Gates
       tags:
       - gate
@@ -698,6 +651,8 @@ paths:
 
         :param db: Database session
 
+        :param credentials: JWT token
+
 
         :raise HTTPException: 409 status code with "Name already registered"
 
@@ -706,14 +661,6 @@ paths:
 
         :return: the newly-inserted gate record'
       operationId: put_gate_gate__put
-      parameters:
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -733,6 +680,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Put Gate
       tags:
       - gate
@@ -760,13 +710,6 @@ paths:
         schema:
           title: Gate Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -779,6 +722,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Delete Gate
       tags:
       - gate
@@ -805,13 +750,6 @@ paths:
         schema:
           title: Gate Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -825,6 +763,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Gate
       tags:
       - gate
@@ -840,6 +780,8 @@ paths:
         :param gate_data: the information of the new gate to be created.
 
         :param db: Database session
+
+        :param credentials: JWT token
 
 
         :raise HTTPException: 404 status code with "Gate not found!" message
@@ -860,13 +802,6 @@ paths:
         schema:
           title: Gate Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -886,6 +821,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Patch Gate
       tags:
       - gate
@@ -934,13 +872,6 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -957,6 +888,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Get Pools
       tags:
       - gate
@@ -997,13 +931,6 @@ paths:
         schema:
           title: Pool Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1016,6 +943,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Delete Pool Gate
       tags:
       - gate
@@ -1059,13 +989,6 @@ paths:
         schema:
           title: Pool Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '201':
           content:
@@ -1078,6 +1001,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Put Pool Gate
       tags:
       - gate
@@ -1131,13 +1057,6 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1154,6 +1073,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Models
       tags:
       - model
@@ -1174,14 +1095,6 @@ paths:
 
         :return: the newly-inserted model record'
       operationId: put_model_model__put
-      parameters:
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -1201,6 +1114,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Put Model
       tags:
       - model
@@ -1228,13 +1144,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1247,6 +1156,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Delete Model
       tags:
       - model
@@ -1273,13 +1184,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1293,6 +1197,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Model
       tags:
       - model
@@ -1305,6 +1211,10 @@ paths:
         :param model_data: JSON fields with new values to update a model
 
         model is not found
+
+        :param db: Database session
+
+        :param credentials: JWT token
 
 
         :raise HTTPException: 404 status code with "Model not found!" message
@@ -1325,13 +1235,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -1351,6 +1254,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Patch Model
       tags:
       - model
@@ -1382,13 +1288,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1401,6 +1300,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Activate Model
       tags:
       - model
@@ -1430,13 +1331,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1449,6 +1343,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Build Model
       tags:
       - model
@@ -1476,13 +1372,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1495,6 +1384,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Deactivate Model
       tags:
       - model
@@ -1522,13 +1413,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1542,6 +1426,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Get Model Details By Id
       tags:
       - model
@@ -1573,13 +1460,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -1599,6 +1479,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Patch Model Details
       tags:
       - model
@@ -1640,13 +1523,6 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1663,6 +1539,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Pools
       tags:
       - pool
@@ -1675,17 +1553,11 @@ paths:
 
         :param db: Database session
 
+        :param credentials: JWT token
+
 
         :return: the newly-inserted pool record'
       operationId: put_pool_pool__put
-      parameters:
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -1705,6 +1577,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Put Pool
       tags:
       - pool
@@ -1732,13 +1607,6 @@ paths:
         schema:
           title: Pool Id
           type: string
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1751,6 +1619,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Delete Pool
       tags:
       - pool
@@ -1777,13 +1647,6 @@ paths:
         schema:
           title: Pool Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1797,6 +1660,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Pool
       tags:
       - pool
@@ -1830,13 +1695,6 @@ paths:
         schema:
           title: Pool Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -1856,6 +1714,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Patch Pool
       tags:
       - pool
@@ -1883,13 +1744,6 @@ paths:
         schema:
           title: Pool Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1906,6 +1760,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Get Pool Models
       tags:
       - pool
@@ -1952,13 +1809,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -1971,6 +1821,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Delete Pool Model
       tags:
       - pool
@@ -2020,13 +1873,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -2046,6 +1892,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Patch Pool Model
       tags:
       - pool
@@ -2091,13 +1940,6 @@ paths:
         schema:
           title: Model Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -2117,6 +1959,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Put Pool Model
       tags:
       - pool
@@ -2158,13 +2003,6 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -2181,6 +2019,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Tests
       tags:
       - test
@@ -2193,6 +2033,8 @@ paths:
 
         :param db: Database session
 
+        :param credentials: JWT token
+
 
         :raise HTTPException: 409 status code with "Name already registered"
 
@@ -2201,14 +2043,6 @@ paths:
 
         :return: the newly-inserted test record'
       operationId: put_test_test__put
-      parameters:
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -2228,6 +2062,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Put Test
       tags:
       - test
@@ -2255,13 +2092,6 @@ paths:
         schema:
           title: Test Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -2274,6 +2104,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Delete Test
       tags:
       - test
@@ -2300,13 +2132,6 @@ paths:
         schema:
           title: Test Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -2320,6 +2145,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Test
       tags:
       - test
@@ -2353,13 +2180,6 @@ paths:
         schema:
           title: Test Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -2379,6 +2199,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
       summary: Patch Test
       tags:
       - test
@@ -2419,13 +2242,6 @@ paths:
           minimum: 0.0
           title: Limit
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -2442,6 +2258,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get Users
       tags:
       - user
@@ -2462,14 +2280,6 @@ paths:
 
         :return: the newly-inserted user record'
       operationId: put_user_user__put
-      parameters:
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -2489,6 +2299,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Put User
       tags:
       - user
@@ -2516,13 +2328,6 @@ paths:
         schema:
           title: User Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -2535,6 +2340,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Delete User
       tags:
       - user
@@ -2561,13 +2368,6 @@ paths:
         schema:
           title: User Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       responses:
         '200':
           content:
@@ -2581,6 +2381,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Get User
       tags:
       - user
@@ -2616,13 +2418,6 @@ paths:
         schema:
           title: User Id
           type: integer
-      - in: query
-        name: auto_error
-        required: false
-        schema:
-          default: true
-          title: Auto Error
-          type: boolean
       requestBody:
         content:
           application/json:
@@ -2642,6 +2437,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+      security:
+      - JWTBearer: []
       summary: Patch User
       tags:
       - user
