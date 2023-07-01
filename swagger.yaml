@@ -54,6 +54,26 @@ components:
           type: string
       title: GatePatch
       type: object
+    GatePool:
+      properties:
+        gate_id:
+          description: Gate ID
+          title: Gate Id
+          type: integer
+        id:
+          description: GatePool ID
+          title: Id
+          type: integer
+        pool_id:
+          description: Pool ID
+          title: Pool Id
+          type: integer
+      required:
+      - gate_id
+      - pool_id
+      - id
+      title: GatePool
+      type: object
     GatePut:
       properties:
         description:
@@ -931,7 +951,7 @@ paths:
 
 
         :return: a list of gate pools data, where skip < number of pools < limit'
-      operationId: get_pools_gate__gate_id__pool__get
+      operationId: get_gate_pools_gate__gate_id__pool__get
       parameters:
       - in: path
         name: gate_id
@@ -961,8 +981,8 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Pool'
-                title: Response Get Pools Gate  Gate Id  Pool  Get
+                  $ref: '#/components/schemas/GatePool'
+                title: Response Get Gate Pools Gate  Gate Id  Pool  Get
                 type: array
           description: Successful Response
         '422':
@@ -974,7 +994,7 @@ paths:
       security:
       - JWTBearer: []
       - JWTBearer: []
-      summary: Get Pools
+      summary: Get Gate Pools
       tags:
       - gate
       - gate-pool
@@ -1076,7 +1096,8 @@ paths:
         '201':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/GatePool'
           description: Successful Response
         '422':
           content:
