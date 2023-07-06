@@ -333,18 +333,8 @@ components:
     ModelStatus:
       description: An enumeration.
       enum:
+      - active
       - inactive
-      - building
-      - built
-      - build_failed
-      - pushing
-      - pushed
-      - push_failed
-      - deploying
-      - deployed
-      - deploy_failed
-      - deactivating
-      - deactivation_failed
       title: ModelStatus
       type: string
     Pool:
@@ -1617,6 +1607,51 @@ paths:
       summary: Patch Model
       tags:
       - model
+  /model/{model_id}/activate:
+    post:
+      description: 'Activates the model with the given ID.
+
+
+        :param model_id: model ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Model not found!"
+
+        :raise HTTPException: 409 status code with "Model already active!"
+
+        :raise HTTPException: 404 status code with "Model details not found!"
+
+        :raise HTTPException: 406 status code with "Model details are not complete!"
+
+
+        :return: a json with a "detail" key indicating success'
+      operationId: activate_model_model__model_id__activate_post
+      parameters:
+      - in: path
+        name: model_id
+        required: true
+        schema:
+          title: Model Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Activate Model
+      tags:
+      - model
   /model/{model_id}/build:
     post:
       description: 'Builds container of the model with the given ID.
@@ -1699,51 +1734,6 @@ paths:
       security:
       - JWTBearer: []
       summary: Deactivate Model
-      tags:
-      - model
-  /model/{model_id}/deploy:
-    post:
-      description: 'Activates the model with the given ID.
-
-
-        :param model_id: model ID
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Model not found!"
-
-        :raise HTTPException: 409 status code with "Model already active!"
-
-        :raise HTTPException: 404 status code with "Model details not found!"
-
-        :raise HTTPException: 406 status code with "Model details are not complete!"
-
-
-        :return: a json with a "detail" key indicating success'
-      operationId: deploy_model_model__model_id__deploy_post
-      parameters:
-      - in: path
-        name: model_id
-        required: true
-        schema:
-          title: Model Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Deploy Model
       tags:
       - model
   /model/{model_id}/details/:
