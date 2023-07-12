@@ -234,6 +234,10 @@ components:
           description: CPU request
           title: Cpu Request
           type: string
+        cpu_utilization:
+          description: CPU utilization
+          title: Cpu Utilization
+          type: integer
         id:
           description: ModelDetails ID
           title: Id
@@ -242,6 +246,10 @@ components:
           description: Docker image tag
           title: Image Tag
           type: string
+        max_replicas:
+          description: Max number of replicas
+          title: Max Replicas
+          type: integer
         memory_limit:
           description: Memory limit
           title: Memory Limit
@@ -250,6 +258,14 @@ components:
           description: Memory request
           title: Memory Request
           type: string
+        memory_utilization:
+          description: Memory utilization
+          title: Memory Utilization
+          type: integer
+        min_replicas:
+          description: Min number of replicas
+          title: Min Replicas
+          type: integer
         mlflow_server_id:
           description: MLflow server ID
           title: Mlflow Server Id
@@ -257,10 +273,6 @@ components:
         model_id:
           description: Model ID
           title: Model Id
-          type: integer
-        replicas:
-          description: Number of replicas
-          title: Replicas
           type: integer
       required:
       - id
@@ -281,10 +293,18 @@ components:
           description: CPU request
           title: Cpu Request
           type: string
+        cpu_utilization:
+          description: CPU utilization
+          title: Cpu Utilization
+          type: integer
         image_tag:
           description: Docker image tag
           title: Image Tag
           type: string
+        max_replicas:
+          description: Max number of replicas
+          title: Max Replicas
+          type: integer
         memory_limit:
           description: Memory limit
           title: Memory Limit
@@ -293,13 +313,17 @@ components:
           description: Memory request
           title: Memory Request
           type: string
+        memory_utilization:
+          description: Memory utilization
+          title: Memory Utilization
+          type: integer
+        min_replicas:
+          description: Min number of replicas
+          title: Min Replicas
+          type: integer
         mlflow_server_id:
           description: MLflow server ID
           title: Mlflow Server Id
-          type: integer
-        replicas:
-          description: Number of replicas
-          title: Replicas
           type: integer
       title: ModelDetailsPatch
       type: object
@@ -1629,6 +1653,8 @@ paths:
 
         :raise HTTPException: 404 status code with "Model not found!"
 
+        :raise HTTPException: 409 status code with "Model is not inactive!"
+
         :raise HTTPException: 404 status code with "Model details not found!"
 
         :raise HTTPException: 406 status code with "Model details are not complete!"
@@ -1674,6 +1700,8 @@ paths:
 
         :raise HTTPException: 409 status code with "Model already inactive!" message
 
+        :raise HTTPException: 409 status code with "Model is not deployed!" message
+
 
         :return: a json with a "detail" key indicating success'
       operationId: deactivate_model_model__model_id__deactivate_post
@@ -1712,8 +1740,6 @@ paths:
 
 
         :raise HTTPException: 404 status code with "Model not found!"
-
-        :raise HTTPException: 409 status code with "Model already active!"
 
         :raise HTTPException: 404 status code with "Model details not found!"
 
