@@ -1,93 +1,130 @@
 components:
   schemas:
-    Gate:
+    CommonMeta:
+      description: Common meta class for Pydantic models
       properties:
         created_at:
-          description: Creation date
+          description: Created at
           format: date-time
           title: Created At
           type: string
         created_by:
-          description: User ID of the creator
+          description: Created by
           title: Created By
-          type: integer
-        description:
-          description: Gate surname
-          title: Description
           type: string
-        id:
-          description: Gate ID
-          title: Id
-          type: integer
-        name:
-          description: Gate name
-          title: Name
-          type: string
+        tags:
+          default: []
+          description: Tags
+          items:
+            type: string
+          title: Tags
+          type: array
         updated_at:
-          description: Last update date
+          description: Updated at
           format: date-time
           title: Updated At
           type: string
         updated_by:
-          description: User ID of the last updater
+          description: Updated by
           title: Updated By
-          type: integer
+          type: string
       required:
-      - name
-      - description
-      - id
       - created_by
-      - created_at
       - updated_by
-      - updated_at
-      title: Gate
+      title: CommonMeta
       type: object
-    GatePatch:
+    Cpu:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        description:
-          description: Gate surname
-          title: Description
+        limit:
+          default: 1500m
+          description: CPU limit
+          title: Limit
           type: string
-        name:
-          description: Gate name
-          title: Name
+        request:
+          default: 500m
+          description: CPU request
+          title: Request
           type: string
-      title: GatePatch
+        target:
+          default: 80
+          description: CPU target usage
+          maximum: 99.0
+          minimum: 1.0
+          title: Target
+          type: integer
+      title: Cpu
       type: object
-    GatePool:
+    Deployment:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        gate_id:
-          description: Gate ID
-          title: Gate Id
-          type: integer
-        id:
-          description: GatePool ID
-          title: Id
-          type: integer
-        pool_id:
-          description: Pool ID
-          title: Pool Id
-          type: integer
-      required:
-      - gate_id
-      - pool_id
-      - id
-      title: GatePool
+        replicas:
+          allOf:
+          - $ref: '#/components/schemas/Replicas'
+          default:
+            max: 1
+            min: 1
+          description: Replicas
+          title: Replicas
+        resources:
+          allOf:
+          - $ref: '#/components/schemas/Resources'
+          default:
+            cpu:
+              limit: 1500m
+              request: 500m
+              target: 80
+            memory:
+              limit: 600Mi
+              request: 200Mi
+              target: 80
+          description: Registry
+          title: Resources
+      title: Deployment
       type: object
-    GatePut:
+    DeploymentPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        description:
-          description: Gate surname
-          title: Description
-          type: string
-        name:
-          description: Gate name
-          title: Name
-          type: string
-      required:
-      - name
-      - description
-      title: GatePut
+        replicas:
+          allOf:
+          - $ref: '#/components/schemas/Replicas'
+          description: Replicas
+          title: Replicas
+        resources:
+          allOf:
+          - $ref: '#/components/schemas/ResourcesPatch'
+          description: Registry
+          title: Resources
+      title: DeploymentPatch
+      type: object
+    Details:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        routing:
+          allOf:
+          - $ref: '#/components/schemas/Routing'
+          default:
+            shadows: []
+            targets: []
+          description: Routing details
+          title: Routing
+      title: Details
       type: object
     HTTPValidationError:
       properties:
@@ -98,100 +135,287 @@ components:
           type: array
       title: HTTPValidationError
       type: object
-    MlflowServer:
+    Memory:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        created_at:
-          description: Creation date
-          format: date-time
-          title: Created At
+        limit:
+          default: 600Mi
+          description: Memory limit
+          title: Limit
           type: string
-        created_by:
-          description: User ID of the creator
-          title: Created By
+        request:
+          default: 200Mi
+          description: Memory request
+          title: Request
+          type: string
+        target:
+          default: 80
+          description: Memory target usage
+          maximum: 99.0
+          minimum: 1.0
+          title: Target
           type: integer
-        id:
-          description: MLflow server ID
-          title: Id
-          type: integer
+      title: Memory
+      type: object
+    MlflowServer:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        _id:
+          description: Mlflow Server ID
+          title: ' Id'
+          type: string
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/CommonMeta'
+          description: Mlflow Server metadata
+          title: Meta
         name:
-          description: MLflow server name
+          description: Mlflow Server name
           title: Name
           type: string
-        tracking_uri:
-          description: MLflow server tracking uri
-          title: Tracking Uri
+        url:
+          description: Mlflow Server URL
+          title: Url
           type: string
-        updated_at:
-          description: Last update date
-          format: date-time
-          title: Updated At
-          type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
       required:
       - name
-      - tracking_uri
-      - id
-      - created_by
-      - created_at
-      - updated_by
-      - updated_at
+      - url
+      - meta
       title: MlflowServer
       type: object
     MlflowServerPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        meta:
+          tags:
+          - string
+          - string
+        name: string
+        url: string
       properties:
-        description:
-          description: MLflow server description
-          title: Description
-          type: string
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__mlflow_server__Meta'
+          description: Mlflow Server metadata
+          title: Meta
         name:
-          description: MLflow server name
+          description: Mlflow Server name
           title: Name
           type: string
-        tracking_uri:
-          description: MLflow server tracking uri
-          title: Tracking Uri
+        url:
+          description: Mlflow Server URL
+          title: Url
           type: string
-      required:
-      - tracking_uri
       title: MlflowServerPatch
       type: object
     MlflowServerPut:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        meta:
+          tags:
+          - string
+          - string
+        name: string
+        url: string
       properties:
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__mlflow_server__Meta'
+          description: Mlflow Server metadata
+          title: Meta
         name:
-          description: MLflow server name
+          description: Mlflow Server name
           title: Name
           type: string
-        tracking_uri:
-          description: MLflow server tracking uri
-          title: Tracking Uri
+        url:
+          description: Mlflow Server URL
+          title: Url
           type: string
       required:
       - name
-      - tracking_uri
+      - url
       title: MlflowServerPut
       type: object
     Model:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        created_at:
-          description: Creation date
-          format: date-time
-          title: Created At
+        _id:
+          description: Model ID
+          title: ' Id'
           type: string
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
         description:
           description: Model description
           title: Description
           type: string
-        id:
+        details:
+          allOf:
+          - $ref: '#/components/schemas/ModelDetails'
+          description: Model details
+          title: Details
+        error:
+          description: Model error
+          title: Error
+          type: string
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/CommonMeta'
+          description: Model meta
+          title: Meta
+        name:
+          description: Model name
+          title: Name
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ModelStatus'
+          default: inactive
+          description: Model status
+        version:
+          description: Model version
+          pattern: ^\d+\.\d+\.\d+$
+          title: Version
+          type: string
+      required:
+      - name
+      - version
+      - description
+      - details
+      - meta
+      title: Model
+      type: object
+    ModelDetails:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        deployment:
+          allOf:
+          - $ref: '#/components/schemas/Deployment'
+          default:
+            replicas:
+              max: 1
+              min: 1
+            resources:
+              cpu:
+                limit: 1500m
+                request: 500m
+                target: 80
+              memory:
+                limit: 600Mi
+                request: 200Mi
+                target: 80
+          description: Deployment
+          title: Deployment
+        image_tag:
+          description: Image tag
+          title: Image Tag
+          type: string
+        registry:
+          allOf:
+          - $ref: '#/components/schemas/Registry'
+          default: {}
+          description: Registry
+          title: Registry
+      title: ModelDetails
+      type: object
+    ModelDetailsPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        deployment:
+          allOf:
+          - $ref: '#/components/schemas/DeploymentPatch'
+          description: Deployment
+          title: Deployment
+        registry:
+          allOf:
+          - $ref: '#/components/schemas/Registry'
+          description: Registry
+          title: Registry
+      title: ModelDetailsPatch
+      type: object
+    ModelDetailsPut:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        deployment:
+          allOf:
+          - $ref: '#/components/schemas/Deployment'
+          default:
+            replicas:
+              max: 1
+              min: 1
+            resources:
+              cpu:
+                limit: 1500m
+                request: 500m
+                target: 80
+              memory:
+                limit: 600Mi
+                request: 200Mi
+                target: 80
+          description: Deployment
+          title: Deployment
+        registry:
+          allOf:
+          - $ref: '#/components/schemas/Registry'
+          default: {}
+          description: Registry
+          title: Registry
+      title: ModelDetailsPut
+      type: object
+    ModelGet:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        _id:
           description: Model ID
-          title: Id
-          type: integer
+          title: ' Id'
+          type: string
+        description:
+          description: Model description
+          title: Description
+          type: string
+        error:
+          description: Model error
+          title: Error
+          type: string
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/CommonMeta'
+          description: Model metadata
+          title: Meta
         name:
           description: Model name
           title: Name
@@ -200,157 +424,124 @@ components:
           allOf:
           - $ref: '#/components/schemas/ModelStatus'
           description: Model status
-        updated_at:
-          description: Last update date
-          format: date-time
-          title: Updated At
+        version:
+          description: Model version
+          title: Version
           type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
       required:
       - name
+      - version
       - description
-      - id
-      - created_by
-      - created_at
-      - updated_by
-      - updated_at
       - status
-      title: Model
-      type: object
-    ModelDetails:
-      properties:
-        artifact_uri:
-          description: Path to the model artifact
-          title: Artifact Uri
-          type: string
-        cpu_limit:
-          description: CPU limit
-          title: Cpu Limit
-          type: string
-        cpu_request:
-          description: CPU request
-          title: Cpu Request
-          type: string
-        cpu_utilization:
-          description: CPU utilization
-          title: Cpu Utilization
-          type: integer
-        id:
-          description: ModelDetails ID
-          title: Id
-          type: integer
-        image_tag:
-          description: Docker image tag
-          title: Image Tag
-          type: string
-        max_replicas:
-          description: Max number of replicas
-          title: Max Replicas
-          type: integer
-        memory_limit:
-          description: Memory limit
-          title: Memory Limit
-          type: string
-        memory_request:
-          description: Memory request
-          title: Memory Request
-          type: string
-        memory_utilization:
-          description: Memory utilization
-          title: Memory Utilization
-          type: integer
-        min_replicas:
-          description: Min number of replicas
-          title: Min Replicas
-          type: integer
-        mlflow_server_id:
-          description: MLflow server ID
-          title: Mlflow Server Id
-          type: integer
-        model_id:
-          description: Model ID
-          title: Model Id
-          type: integer
-      required:
-      - id
-      - model_id
-      title: ModelDetails
-      type: object
-    ModelDetailsPatch:
-      properties:
-        artifact_uri:
-          description: Path to the model artifact
-          title: Artifact Uri
-          type: string
-        cpu_limit:
-          description: CPU limit
-          title: Cpu Limit
-          type: string
-        cpu_request:
-          description: CPU request
-          title: Cpu Request
-          type: string
-        cpu_utilization:
-          description: CPU utilization
-          title: Cpu Utilization
-          type: integer
-        image_tag:
-          description: Docker image tag
-          title: Image Tag
-          type: string
-        max_replicas:
-          description: Max number of replicas
-          title: Max Replicas
-          type: integer
-        memory_limit:
-          description: Memory limit
-          title: Memory Limit
-          type: string
-        memory_request:
-          description: Memory request
-          title: Memory Request
-          type: string
-        memory_utilization:
-          description: Memory utilization
-          title: Memory Utilization
-          type: integer
-        min_replicas:
-          description: Min number of replicas
-          title: Min Replicas
-          type: integer
-        mlflow_server_id:
-          description: MLflow server ID
-          title: Mlflow Server Id
-          type: integer
-      title: ModelDetailsPatch
+      - meta
+      title: ModelGet
       type: object
     ModelPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
         description:
           description: Model description
           title: Description
           type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/ModelDetailsPatch'
+          description: Model details
+          title: Details
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__model__Meta'
+          description: Model meta
+          title: Meta
         name:
           description: Model name
           title: Name
           type: string
+        version:
+          description: Model version
+          title: Version
+          type: number
       title: ModelPatch
       type: object
     ModelPut:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        description: model_description
+        details:
+          deployment:
+            replicas:
+              max: 1
+              min: 1
+            resources:
+              cpu:
+                limit: 1500m
+                request: 500m
+                target: 80
+              memory:
+                limit: 600Mi
+                request: 200Mi
+                target: 80
+          registry:
+            artifact_uri: registry_artifact_uri
+            id: 64b2c1b9f4b43e8e48b0d3af
+        meta:
+          tags:
+          - tag1
+          - tag2
+        name: model_name
+        version: 1.0.0
       properties:
         description:
           description: Model description
           title: Description
           type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/ModelDetailsPut'
+          default:
+            deployment:
+              replicas:
+                max: 1
+                min: 1
+              resources:
+                cpu:
+                  limit: 1500m
+                  request: 500m
+                  target: 80
+                memory:
+                  limit: 600Mi
+                  request: 200Mi
+                  target: 80
+            registry: {}
+          description: Model details
+          title: Details
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__model__Meta'
+          default:
+            tags: []
+          description: Model meta
+          title: Meta
         name:
           description: Model name
           title: Name
           type: string
+        version:
+          description: Model version
+          pattern: ^\d+\.\d+\.\d+$
+          title: Version
+          type: string
       required:
       - name
+      - version
       - description
       title: ModelPut
       type: object
@@ -372,143 +563,161 @@ components:
       title: ModelStatus
       type: string
     Pool:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        created_at:
-          description: Creation date
-          format: date-time
-          title: Created At
+        _id:
+          description: Model ID
+          title: ' Id'
           type: string
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
         description:
           description: Pool description
           title: Description
           type: string
-        id:
-          description: User ID
-          title: Id
-          type: integer
+        details:
+          allOf:
+          - $ref: '#/components/schemas/Details'
+          default:
+            routing:
+              shadows: []
+              targets: []
+          description: Pool details
+          title: Details
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/CommonMeta'
+          description: Pool metadata
+          title: Meta
         name:
           description: Pool name
           title: Name
           type: string
-        updated_at:
-          description: Last update date
-          format: date-time
-          title: Updated At
-          type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
-          type: integer
       required:
       - name
       - description
-      - id
-      - created_by
-      - created_at
-      - updated_by
-      - updated_at
+      - meta
       title: Pool
       type: object
-    PoolModel:
+    PoolModelGet:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        shadows:
+        - description: model_description
+          model_id: '1'
+          name: model_name
+          version: 1.0.0
+        targets:
+        - description: model_description
+          model_id: '1'
+          name: model_name
+          version: 1.0.0
+          weight: 50
       properties:
-        mode:
-          allOf:
-          - $ref: '#/components/schemas/PoolModelMode'
-          description: Model mode
-        model_id:
-          description: Model ID
-          title: Model Id
-          type: integer
-        pool_id:
-          description: Pool ID
-          title: Pool Id
-          type: integer
-        weight:
-          description: Model weight
-          title: Weight
-          type: integer
-      required:
-      - mode
-      - weight
-      - pool_id
-      - model_id
-      title: PoolModel
+        shadows:
+          default: []
+          description: Routing shadows
+          items:
+            $ref: '#/components/schemas/ShadowsGet'
+          title: Shadows
+          type: array
+        targets:
+          default: []
+          description: Routing targets
+          items:
+            $ref: '#/components/schemas/TargetsGet'
+          title: Targets
+          type: array
+      title: PoolModelGet
       type: object
-    PoolModelDetailed:
+    PoolModelPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        shadows:
+        - model_id: '1'
+        targets:
+        - model_id: '1'
+          weight: 50
       properties:
-        description:
-          description: Model description
-          title: Description
-          type: string
-        mode:
-          allOf:
-          - $ref: '#/components/schemas/PoolModelMode'
-          description: Model mode
-        model_id:
-          description: Model ID
-          title: Model Id
-          type: integer
-        name:
-          description: Model name
-          title: Name
-          type: string
-        pool_id:
-          description: Pool ID
-          title: Pool Id
-          type: integer
-        weight:
-          description: Model weight
-          title: Weight
-          type: integer
-      required:
-      - mode
-      - weight
-      - pool_id
-      - model_id
-      - name
-      - description
-      title: PoolModelDetailed
+        shadows:
+          default: []
+          description: Routing shadow
+          items:
+            $ref: '#/components/schemas/ShadowsModel'
+          title: Shadows
+          type: array
+        targets:
+          default: []
+          description: Routing targets
+          items:
+            $ref: '#/components/schemas/TargetsModel'
+          title: Targets
+          type: array
+      title: PoolModelPatch
       type: object
-    PoolModelMode:
-      description: An enumeration.
-      enum:
-      - production
-      - staging
-      title: PoolModelMode
     PoolPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        description: pool_description
+        meta:
+          tags:
+          - pool_tag1
+        name: pool_name
       properties:
         description:
           description: Pool description
           title: Description
           type: string
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__pool__Meta'
+          description: Pool tags
+          title: Meta
         name:
           description: Pool name
           title: Name
           type: string
+      required:
+      - name
+      - description
       title: PoolPatch
       type: object
-    PoolPatchModel:
-      properties:
-        mode:
-          allOf:
-          - $ref: '#/components/schemas/PoolModelMode'
-          description: Model mode
-        weight:
-          description: Model weight
-          title: Weight
-          type: integer
-      title: PoolPatchModel
-      type: object
     PoolPut:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        description: pool_description
+        meta:
+          tags:
+          - pool_tag1
+        name: pool_name
       properties:
         description:
           description: Pool description
           title: Description
           type: string
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__pool__Meta'
+          description: Pool tags
+          title: Meta
         name:
           description: Pool name
           title: Name
@@ -518,132 +727,225 @@ components:
       - description
       title: PoolPut
       type: object
-    PoolPutModel:
+    Registry:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        mode:
+        artifact_uri:
+          description: Registry artifact uri
+          title: Artifact Uri
+          type: string
+        id:
+          description: Registry id
+          title: Id
+          type: string
+      title: Registry
+      type: object
+    Replicas:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        max:
+          default: 1
+          description: Maximum number of replicas
+          minimum: 1.0
+          title: Max
+          type: integer
+        min:
+          default: 1
+          description: Minimum number of replicas
+          minimum: 1.0
+          title: Min
+          type: integer
+      title: Replicas
+      type: object
+    Resources:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        cpu:
           allOf:
-          - $ref: '#/components/schemas/PoolModelMode'
-          description: Model mode
+          - $ref: '#/components/schemas/Cpu'
+          default:
+            limit: 1500m
+            request: 500m
+            target: 80
+          description: CPU details
+          title: Cpu
+        memory:
+          allOf:
+          - $ref: '#/components/schemas/Memory'
+          default:
+            limit: 600Mi
+            request: 200Mi
+            target: 80
+          description: Memory details
+          title: Memory
+      title: Resources
+      type: object
+    ResourcesPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        cpu:
+          allOf:
+          - $ref: '#/components/schemas/Cpu'
+          description: CPU details
+          title: Cpu
+        memory:
+          allOf:
+          - $ref: '#/components/schemas/Memory'
+          description: Memory details
+          title: Memory
+      title: ResourcesPatch
+      type: object
+    Routing:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        shadows:
+          default: []
+          description: Routing shadow
+          items:
+            $ref: '#/components/schemas/ShadowsModel'
+          title: Shadows
+          type: array
+        targets:
+          default: []
+          description: Routing targets
+          items:
+            $ref: '#/components/schemas/TargetsModel'
+          title: Targets
+          type: array
+      title: Routing
+      type: object
+    ShadowsGet:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        description:
+          description: Model description
+          title: Description
+          type: string
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: string
+        name:
+          description: Model name
+          title: Name
+          type: string
+        version:
+          description: Model version
+          title: Version
+          type: string
+      required:
+      - name
+      - version
+      - description
+      - model_id
+      title: ShadowsGet
+      type: object
+    ShadowsModel:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        model_id:
+          description: Model id
+          title: Model Id
+          type: string
+      required:
+      - model_id
+      title: ShadowsModel
+      type: object
+    TargetsGet:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        description:
+          description: Model description
+          title: Description
+          type: string
+        model_id:
+          description: Model ID
+          title: Model Id
+          type: string
+        name:
+          description: Model name
+          title: Name
+          type: string
+        version:
+          description: Model version
+          title: Version
+          type: string
         weight:
           description: Model weight
           title: Weight
           type: integer
       required:
-      - mode
+      - name
+      - version
+      - description
+      - model_id
       - weight
-      title: PoolPutModel
+      title: TargetsGet
       type: object
-    Test:
+    TargetsModel:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        created_at:
-          description: Creation date
-          format: date-time
-          title: Created At
+        model_id:
+          description: Model id
+          title: Model Id
           type: string
-        created_by:
-          description: User ID of the creator
-          title: Created By
-          type: integer
-        description:
-          description: Test description
-          title: Description
-          type: string
-        id:
-          description: Test ID
-          title: Id
-          type: integer
-        name:
-          description: Test name
-          title: Name
-          type: string
-        updated_at:
-          description: Last update date
-          format: date-time
-          title: Updated At
-          type: string
-        updated_by:
-          description: User ID of the last updater
-          title: Updated By
+        weight:
+          default: 1
+          description: Model weight
+          minimum: 1.0
+          title: Weight
           type: integer
       required:
-      - name
-      - description
-      - id
-      - created_by
-      - created_at
-      - updated_by
-      - updated_at
-      title: Test
-      type: object
-    TestPatch:
-      properties:
-        description:
-          description: Test description
-          title: Description
-          type: string
-        name:
-          description: Test name
-          title: Name
-          type: string
-      title: TestPatch
-      type: object
-    TestPut:
-      properties:
-        description:
-          description: Test description
-          title: Description
-          type: string
-        name:
-          description: Test name
-          title: Name
-          type: string
-      required:
-      - name
-      - description
-      title: TestPut
+      - model_id
+      title: TargetsModel
       type: object
     User:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
       properties:
-        email:
-          description: User email
-          format: email
-          title: Email
-          type: string
-        id:
+        _id:
           description: User ID
-          title: Id
-          type: integer
-        name:
-          description: User name
-          title: Name
+          title: ' Id'
           type: string
-        surname:
-          description: User surname
-          title: Surname
-          type: string
-      required:
-      - name
-      - surname
-      - email
-      - id
-      title: User
-      type: object
-    UserPatch:
-      properties:
-        email:
-          format: email
-          title: Email
-          type: string
-        name:
-          title: Name
-          type: string
-        surname:
-          title: Surname
-          type: string
-      title: UserPatch
-      type: object
-    UserPut:
-      properties:
         email:
           description: User email
           format: email
@@ -661,7 +963,7 @@ components:
       - name
       - surname
       - email
-      title: UserPut
+      title: User
       type: object
     ValidationError:
       properties:
@@ -684,29 +986,70 @@ components:
       - type
       title: ValidationError
       type: object
+    schemas__mlflow_server__Meta:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        tags:
+          description: Mlflow Server tags
+          items:
+            type: string
+          title: Tags
+          type: array
+      title: Meta
+      type: object
+    schemas__model__Meta:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        tags:
+          default: []
+          description: Model tags
+          items:
+            type: string
+          title: Tags
+          type: array
+      title: Meta
+      type: object
+    schemas__pool__Meta:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        tags:
+          description: Pool tags
+          items:
+            type: string
+          title: Tags
+          type: array
+      title: Meta
+      type: object
   securitySchemes:
     JWTBearer:
       scheme: bearer
       type: http
 info:
-  description: Backend Service for the ML Platform
-  title: Backend Service
+  description: Backend Service for the Tyro Platform
+  title: "Tyro \U0001F996"
   version: 0.1.0
 openapi: 3.0.2
 paths:
   /:
     get:
-      description: 'Root endpoint. Returns a simple message for testing purposes.
-
-        :return: A "Hello World" message.'
       operationId: root__get
       responses:
         '200':
           content:
             application/json:
-              schema:
-                title: Response Root  Get
-                type: object
+              schema: {}
           description: Successful Response
       summary: Root
   /auth:
@@ -721,431 +1064,6 @@ paths:
       summary: Auth
       tags:
       - login
-  /gate/:
-    get:
-      description: 'Retrieves a list of gates with pagination options (skip, limit).
-
-
-        :param db: Database session
-
-        :param skip: (optional) the number of records to skip (default: 0)
-
-        :param limit: (optional) the maximum number of records to retrieve (default:
-        100)
-
-
-        :raise HTTPException: 404 status code with "Gates not found!" message
-
-        if the specified range of gate ID''s does not exist in the database.
-
-
-        :return: a list of gate data, where skip < gate_id < limit'
-      operationId: get_gates_gate__get
-      parameters:
-      - in: query
-        name: skip
-        required: false
-        schema:
-          default: 0
-          minimum: 0.0
-          title: Skip
-          type: integer
-      - in: query
-        name: limit
-        required: false
-        schema:
-          default: 100
-          minimum: 0.0
-          title: Limit
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Gate'
-                title: Response Get Gates Gate  Get
-                type: array
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Get Gates
-      tags:
-      - gate
-    put:
-      description: 'Creates a new gate with the given information and returns the
-        gate information.
-
-
-        :param gate_data: the information of the new gate to be created.
-
-        :param db: Database session
-
-        :param credentials: JWT token
-
-
-        :raise HTTPException: 409 status code with "Name already registered"
-
-        message if the provided name for gate already exists in the database
-
-
-        :return: the newly-inserted gate record'
-      operationId: put_gate_gate__put
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GatePut'
-        required: true
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Gate'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Put Gate
-      tags:
-      - gate
-  /gate/{gate_id}:
-    delete:
-      description: 'Deletes the gate with the specified email.
-
-
-        :param id: The id of the gate to be deleted.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Gate not found!" message
-
-        if the specified gate ID does not exist in the database.
-
-
-        :return: the updated gate record'
-      operationId: delete_gate_gate__gate_id__delete
-      parameters:
-      - in: path
-        name: gate_id
-        required: true
-        schema:
-          title: Gate Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Delete Gate
-      tags:
-      - gate
-    get:
-      description: 'Retrieves the information of a specific gate by ID.
-
-
-        :param gate_id: the gate ID to retrieve
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Gate not found!" message
-
-        if the specified gate ID does not exist in the database.
-
-
-        :return: the gate data corresponding to the given ID'
-      operationId: get_gate_gate__gate_id__get
-      parameters:
-      - in: path
-        name: gate_id
-        required: true
-        schema:
-          title: Gate Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Gate'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Get Gate
-      tags:
-      - gate
-    patch:
-      description: 'Updates the information of an existing gate with the provided
-        data and
-
-        returns the updated gate information.
-
-
-        :param gate_id: the gate ID to patch
-
-        :param gate_data: the information of the new gate to be created.
-
-        :param db: Database session
-
-        :param credentials: JWT token
-
-
-        :raise HTTPException: 404 status code with "Gate not found!" message
-
-        if the specified gate ID does not exist in the database.
-
-        :raise HTTPException: 409 status code with "Name already registered"
-
-        message if the provided name for gate already exists in the database
-
-
-        :return: the updated gate record'
-      operationId: patch_gate_gate__gate_id__patch
-      parameters:
-      - in: path
-        name: gate_id
-        required: true
-        schema:
-          title: Gate Id
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GatePatch'
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Gate'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Patch Gate
-      tags:
-      - gate
-  /gate/{gate_id}/pool/:
-    get:
-      description: 'Retrieves a list of gates with pagination options (skip, limit).
-
-
-        :param gate_id: the gate ID to retrieve
-
-        :param db: Database session
-
-        :param skip: (optional) the number of records to skip (default: 0)
-
-        :param limit: (optional) the maximum number of records to retrieve (default:
-        100)
-
-
-        :raise HTTPException: 404 status code with "Pools not found!" message
-
-        if gate has no pools.
-
-
-        :return: a list of gate pools data, where skip < number of pools < limit'
-      operationId: get_gate_pools_gate__gate_id__pool__get
-      parameters:
-      - in: path
-        name: gate_id
-        required: true
-        schema:
-          title: Gate Id
-          type: integer
-      - in: query
-        name: skip
-        required: false
-        schema:
-          default: 0
-          minimum: 0.0
-          title: Skip
-          type: integer
-      - in: query
-        name: limit
-        required: false
-        schema:
-          default: 100
-          minimum: 0.0
-          title: Limit
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/GatePool'
-                title: Response Get Gate Pools Gate  Gate Id  Pool  Get
-                type: array
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Get Gate Pools
-      tags:
-      - gate
-      - gate-pool
-  /gate/{gate_id}/pool/{pool_id}:
-    delete:
-      description: 'Deletes pool from gate.
-
-
-        :param gate_id: The id of the gate from which to delet.
-
-        :param pool_id: The id of the pool to be deleted.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Gate not found!" message
-
-        if the specified gate ID does not exist in the database.
-
-        :raise HTTPException: 404 status code with "Pool not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-
-        :return: JSON response with status code 200'
-      operationId: delete_pool_gate_gate__gate_id__pool__pool_id__delete
-      parameters:
-      - in: path
-        name: gate_id
-        required: true
-        schema:
-          title: Gate Id
-          type: integer
-      - in: path
-        name: pool_id
-        required: true
-        schema:
-          title: Pool Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Delete Pool Gate
-      tags:
-      - gate
-      - gate-pool
-    put:
-      description: 'Adds existing pool to gate.
-
-
-        :param gate_id: the gate ID to retrieve
-
-        :param pool_id: the pool ID to retrieve
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Gate not found!" message
-
-        if the specified gate ID does not exist in the database.
-
-        :raise HTTPException: 404 status code with "Pool not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-        :raise HTTPException: 409 status code with "Pool already in gate!"
-
-        message if the specified pool ID already in gate.
-
-
-        :return: JSON response with status code 201'
-      operationId: put_pool_gate_gate__gate_id__pool__pool_id__put
-      parameters:
-      - in: path
-        name: gate_id
-        required: true
-        schema:
-          title: Gate Id
-          type: integer
-      - in: path
-        name: pool_id
-        required: true
-        schema:
-          title: Pool Id
-          type: integer
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GatePool'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Put Pool Gate
-      tags:
-      - gate
-      - gate-pool
   /login:
     get:
       operationId: login_login_get
@@ -1284,7 +1202,7 @@ paths:
         required: true
         schema:
           title: Mlflow Server Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1324,7 +1242,7 @@ paths:
         required: true
         schema:
           title: Mlflow Server Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1375,7 +1293,7 @@ paths:
         required: true
         schema:
           title: Mlflow Server Id
-          type: integer
+          type: string
       requestBody:
         content:
           application/json:
@@ -1444,7 +1362,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Model'
+                  $ref: '#/components/schemas/ModelGet'
                 title: Response Get Models Model  Get
                 type: array
           description: Successful Response
@@ -1524,7 +1442,7 @@ paths:
         required: true
         schema:
           title: Model Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1564,7 +1482,7 @@ paths:
         required: true
         schema:
           title: Model Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1615,7 +1533,7 @@ paths:
         required: true
         schema:
           title: Model Id
-          type: integer
+          type: string
       requestBody:
         content:
           application/json:
@@ -1668,7 +1586,7 @@ paths:
         required: true
         schema:
           title: Model Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1682,6 +1600,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
+      - JWTBearer: []
       - JWTBearer: []
       summary: Build Model
       tags:
@@ -1711,7 +1630,7 @@ paths:
         required: true
         schema:
           title: Model Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1725,6 +1644,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
+      - JWTBearer: []
       - JWTBearer: []
       summary: Deactivate Model
       tags:
@@ -1754,7 +1674,7 @@ paths:
         required: true
         schema:
           title: Model Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1769,106 +1689,10 @@ paths:
           description: Validation Error
       security:
       - JWTBearer: []
+      - JWTBearer: []
       summary: Deploy Model
       tags:
       - model
-  /model/{model_id}/details/:
-    get:
-      description: 'Retrieves the information of a specific model_details by ID.
-
-
-        :param model_id: model ID
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "ModelDetails not found!" message
-
-        if the specified gate ID does not exist in the database.
-
-
-        :return: the model_details data corresponding to the given ID'
-      operationId: get_model_details_by_id_model__model_id__details__get
-      parameters:
-      - in: path
-        name: model_id
-        required: true
-        schema:
-          title: Model Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ModelDetails'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Get Model Details By Id
-      tags:
-      - model
-      - model-details
-    patch:
-      description: 'Updates the information of an existing model_details
-
-        and returns the model_details information.
-
-
-        :param model_id: model ID
-
-        :param model_details_data: the information of the model_details to be updated.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "ModelDetails not found!" message
-
-        if the specified model_details does not exist in the database.
-
-
-        :return: the model_details data corresponding to the given ID'
-      operationId: patch_model_details_model__model_id__details__patch
-      parameters:
-      - in: path
-        name: model_id
-        required: true
-        schema:
-          title: Model Id
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ModelDetailsPatch'
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ModelDetails'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Patch Model Details
-      tags:
-      - model
-      - model-details
   /pool/:
     get:
       description: 'Retrieves a list of pools with pagination options (skip, limit).
@@ -2103,14 +1927,14 @@ paths:
       summary: Patch Pool
       tags:
       - pool
-  /pool/{pool_id}/model/:
-    get:
-      description: 'Retrieves a list of models in a pool.
+  /pool/{pool_id}/deploy:
+    post:
+      description: 'Deploy the pool with the given ID.
 
+
+        :param pool_id: pool ID
 
         :param db: Database session
-
-        :param pool_id: the pool ID to retrieve models from
 
 
         :raise HTTPException: 404 status code with "Pool not found!" message
@@ -2118,24 +1942,62 @@ paths:
         if the specified pool ID does not exist in the database.
 
 
-        :return: a list of models in the pool'
-      operationId: get_pool_models_pool__pool_id__model__get
+        :return: a json with a "detail" key indicating success'
+      operationId: deploy_pool_pool__pool_id__deploy_post
       parameters:
       - in: path
         name: pool_id
         required: true
         schema:
           title: Pool Id
-          type: integer
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Deploy Pool
+      tags:
+      - pool
+  /pool/{pool_id}/models/:
+    get:
+      description: 'Retrieves the detailed informations about models in the pool
+
+
+        :param pool_id: pool ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: Detailed informations about models in the pool'
+      operationId: get_pool_models_pool__pool_id__models__get
+      parameters:
+      - in: path
+        name: pool_id
+        required: true
+        schema:
+          title: Pool Id
+          type: string
       responses:
         '200':
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/PoolModelDetailed'
-                title: Response Get Pool Models Pool  Pool Id  Model  Get
-                type: array
+                $ref: '#/components/schemas/PoolModelGet'
           description: Successful Response
         '422':
           content:
@@ -2149,125 +2011,44 @@ paths:
       summary: Get Pool Models
       tags:
       - pool
-      - pool-model
-  /pool/{pool_id}/model/{model_id}:
-    delete:
-      description: 'Deletes the pool with the given ID.
-
-
-        :param pool_id: the pool ID to retrieve models from
-
-        :param model_id: the model ID to retrieve from the pool
-
-        :param pool_model_data: the information of the model in the pool to be deleted.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Pool not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-        :raise HTTPException: 404 status code with "Model not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-        :raise HTTPException: 404 status code with "Model not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-
-        :return: a json with a "detail" key indicating success'
-      operationId: delete_pool_model_pool__pool_id__model__model_id__delete
-      parameters:
-      - in: path
-        name: pool_id
-        required: true
-        schema:
-          title: Pool Id
-          type: integer
-      - in: path
-        name: model_id
-        required: true
-        schema:
-          title: Model Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Delete Pool Model
-      tags:
-      - pool
-      - pool-model
+      - pool-models
     patch:
-      description: 'Updates the information of an existing pool with the provided
-        data and
-
-        returns the updated pool information.
+      description: 'Allows to add/patch many models to the pool
 
 
-        :param pool_id: the pool ID to retrieve models from
+        :param pool_id: pool ID
 
-        :param model_id: the model ID to retrieve from the pool
-
-        :param pool_model_data: the information of the model in the pool to be patched.
+        :param details: information about models to be added to the pool
 
         :param db: Database session
 
 
-        :raise HTTPException: 404 status code with "Model not found in the pool!"
-        message
-
-        if the specified model ID does not exist in the pool database.
-
         :raise HTTPException: 404 status code with "Pool not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-        :raise HTTPException: 404 status code with "Model not found!" message
 
         if the specified pool ID does not exist in the database.
 
 
         :return: the updated pool record'
-      operationId: patch_pool_model_pool__pool_id__model__model_id__patch
+      operationId: patch_pool_model_pool__pool_id__models__patch
       parameters:
       - in: path
         name: pool_id
         required: true
         schema:
           title: Pool Id
-          type: integer
-      - in: path
-        name: model_id
-        required: true
-        schema:
-          title: Model Id
-          type: integer
+          type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PoolPatchModel'
+              $ref: '#/components/schemas/PoolModelPatch'
         required: true
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PoolModel'
+                $ref: '#/components/schemas/Pool'
           description: Successful Response
         '422':
           content:
@@ -2276,318 +2057,13 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
+      - JWTBearer: []
       - JWTBearer: []
       - JWTBearer: []
       summary: Patch Pool Model
       tags:
       - pool
-      - pool-model
-    put:
-      description: 'Inserts a model into a given pool.
-
-
-        :param pool_id: the pool ID to retrieve models from
-
-        :param model_id: the model ID to retrieve from the pool
-
-        :param pool_model_data: the information about the pool and model.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Pool not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-        :raise HTTPException: 404 status code with "Model not found!" message
-
-        if the specified model ID does not exist in the database.
-
-        :raise HTTPException: 404 status code with "Model not found!" message
-
-        if the specified pool ID does not exist in the database.
-
-
-        :return: the newly-inserted pool record'
-      operationId: put_pool_model_pool__pool_id__model__model_id__put
-      parameters:
-      - in: path
-        name: pool_id
-        required: true
-        schema:
-          title: Pool Id
-          type: integer
-      - in: path
-        name: model_id
-        required: true
-        schema:
-          title: Model Id
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PoolPutModel'
-        required: true
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PoolModel'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Put Pool Model
-      tags:
-      - pool
-      - pool-model
-  /test/:
-    get:
-      description: 'Retrieves a list of tests with pagination options (skip, limit).
-
-
-        :param db: Database session
-
-        :param skip: (optional) the number of records to skip (default: 0)
-
-        :param limit: (optional) the maximum number of records to retrieve (default:
-        100)
-
-
-        :raise HTTPException: 404 status code with "Test not found!" message
-
-        if the specified range of test ID''s does not exist in the database.
-
-
-        :return: a list of user data, where skip < test_id < limit'
-      operationId: get_tests_test__get
-      parameters:
-      - in: query
-        name: skip
-        required: false
-        schema:
-          default: 0
-          minimum: 0.0
-          title: Skip
-          type: integer
-      - in: query
-        name: limit
-        required: false
-        schema:
-          default: 100
-          minimum: 0.0
-          title: Limit
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Test'
-                title: Response Get Tests Test  Get
-                type: array
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Get Tests
-      tags:
-      - test
-    put:
-      description: 'Creates a new test with the given information and returns the
-        test information.
-
-
-        :param test_data: the information of the new test to be created.
-
-        :param db: Database session
-
-        :param credentials: JWT token
-
-
-        :raise HTTPException: 409 status code with "Name already registered"
-
-        message if the provided name already exists in the database.
-
-
-        :return: the newly-inserted test record'
-      operationId: put_test_test__put
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TestPut'
-        required: true
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Test'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Put Test
-      tags:
-      - test
-  /test/{test_id}:
-    delete:
-      description: 'Deletes a test with the given ID and returns the test information.
-
-
-        :param test_id: test ID
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Test not found!" message
-
-        if the specified test ID does not exist in the database.
-
-
-        :return: the deleted test record'
-      operationId: delete_test_test__test_id__delete
-      parameters:
-      - in: path
-        name: test_id
-        required: true
-        schema:
-          title: Test Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Delete Test
-      tags:
-      - test
-    get:
-      description: 'Retrieves the information of a specific test by ID.
-
-
-        :param test_id: test ID
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Test not found!" message
-
-        if the specified test ID does not exist in the database.
-
-
-        :return: the test data corresponding to the given ID'
-      operationId: get_test_test__test_id__get
-      parameters:
-      - in: path
-        name: test_id
-        required: true
-        schema:
-          title: Test Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Test'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Get Test
-      tags:
-      - test
-    patch:
-      description: 'Updates a test with the given information and returns the test
-        information.
-
-
-        :param test_id: test ID
-
-        :param test_data: the information of the test to be updated.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "Test not found!" message
-
-        if the specified test ID does not exist in the database.
-
-        :raise HTTPException: 409 status code with "Name already registered"
-
-        message if the provided name already exists in the database.
-
-
-        :return: the updated test record'
-      operationId: patch_test_test__test_id__patch
-      parameters:
-      - in: path
-        name: test_id
-        required: true
-        schema:
-          title: Test Id
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TestPatch'
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Test'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      - JWTBearer: []
-      summary: Patch Test
-      tags:
-      - test
+      - pool-models
   /user/:
     get:
       description: 'Retrieves a list of users with pagination options (skip, limit).
@@ -2601,12 +2077,7 @@ paths:
         100)
 
 
-        :raise HTTPException: 404 status code with "User not found!" message
-
-        if the specified range of user ID''s does not exist in the database.
-
-
-        :return: a list of user data, where skip < user_id < limit'
+        :return: a list of user data, where skip <= user_id < limit'
       operationId: get_users_user__get
       parameters:
       - in: query
@@ -2646,95 +2117,14 @@ paths:
       summary: Get Users
       tags:
       - user
-    put:
-      description: 'Creates a new user with the given information and returns the
-        user information.
-
-
-        :param user_data: the information of the new user to be created.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 409 status code with "Email already registered"
-
-        message if the provided email already exists in the database.
-
-
-        :return: the newly-inserted user record'
-      operationId: put_user_user__put
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserPut'
-        required: true
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Put User
-      tags:
-      - user
   /user/{user_id}:
-    delete:
-      description: 'Deletes the user with the specified email.
-
-
-        :param id: The id of the user to be deleted.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "User not found!" message
-
-        if the specified user ID does not exist in the database.
-
-
-        :return: the updated user record'
-      operationId: delete_user_user__user_id__delete
-      parameters:
-      - in: path
-        name: user_id
-        required: true
-        schema:
-          title: User Id
-          type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Delete User
-      tags:
-      - user
     get:
-      description: 'Retrieves the information of a specific user by ID.
+      description: 'Retrieves a user with the specified ID.
 
-
-        :param user_data: the information of the new user to be created.
 
         :param db: Database session
+
+        :param user_id: the ID of the user to retrieve
 
 
         :raise HTTPException: 404 status code with "User not found!" message
@@ -2742,7 +2132,7 @@ paths:
         if the specified user ID does not exist in the database.
 
 
-        :return: the user data corresponding to the given ID'
+        :return: the user data'
       operationId: get_user_user__user_id__get
       parameters:
       - in: path
@@ -2750,7 +2140,7 @@ paths:
         required: true
         schema:
           title: User Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -2767,61 +2157,5 @@ paths:
       security:
       - JWTBearer: []
       summary: Get User
-      tags:
-      - user
-    patch:
-      description: 'Updates the information of an existing user with the provided
-        data and
-
-        returns the updated user information.
-
-
-        :param user_id: the user ID to patch
-
-        :param user_data: the information of the new user to be created.
-
-        :param db: Database session
-
-
-        :raise HTTPException: 404 status code with "User not found!" message
-
-        if the specified user ID does not exist in the database.
-
-        :raise HTTPException: 409 status code with "Email already registered"
-
-        message if the provided email already exists in the database.
-
-
-        :return: the updated user record'
-      operationId: patch_user_user__user_id__patch
-      parameters:
-      - in: path
-        name: user_id
-        required: true
-        schema:
-          title: User Id
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserPatch'
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - JWTBearer: []
-      summary: Patch User
       tags:
       - user
