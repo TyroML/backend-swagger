@@ -1927,6 +1927,47 @@ paths:
       summary: Patch Pool
       tags:
       - pool
+  /pool/{pool_id}/deactivate:
+    post:
+      description: 'Deploy the pool with the given ID.
+
+
+        :param pool_id: pool ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: a json with a "detail" key indicating success'
+      operationId: deactivate_pool_pool__pool_id__deactivate_post
+      parameters:
+      - in: path
+        name: pool_id
+        required: true
+        schema:
+          title: Pool Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Deactivate Pool
+      tags:
+      - pool
   /pool/{pool_id}/deploy:
     post:
       description: 'Deploy the pool with the given ID.
