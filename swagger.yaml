@@ -676,6 +676,7 @@ components:
         meta:
           tags:
           - pool_tag1
+          - pool_tag2
         name: pool_name
       properties:
         description:
@@ -707,6 +708,7 @@ components:
         meta:
           tags:
           - pool_tag1
+          - pool_tag2
         name: pool_name
       properties:
         description:
@@ -716,6 +718,8 @@ components:
         meta:
           allOf:
           - $ref: '#/components/schemas/schemas__pool__Meta'
+          default:
+            tags: []
           description: Pool tags
           title: Meta
         name:
@@ -1025,6 +1029,7 @@ components:
         Sets common config for all models'
       properties:
         tags:
+          default: []
           description: Pool tags
           items:
             type: string
