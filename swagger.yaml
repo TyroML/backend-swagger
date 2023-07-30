@@ -586,6 +586,10 @@ components:
               targets: []
           description: Pool details
           title: Details
+        error:
+          description: Pool error
+          title: Error
+          type: string
         meta:
           allOf:
           - $ref: '#/components/schemas/CommonMeta'
@@ -595,6 +599,11 @@ components:
           description: Pool name
           title: Name
           type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/PoolStatus'
+          default: inactive
+          description: Pool status
       required:
       - name
       - description
@@ -731,6 +740,17 @@ components:
       - description
       title: PoolPut
       type: object
+    PoolStatus:
+      description: An enumeration.
+      enum:
+      - inactive
+      - deployed
+      - deploying
+      - deploy_failed
+      - deactivating
+      - deactivation_failed
+      title: PoolStatus
+      type: string
     Registry:
       description: 'Base schema class for Pydantic models
 
@@ -1043,7 +1063,7 @@ components:
       type: http
 info:
   description: Backend Service for the Tyro Platform
-  title: "Tyro \U0001F996"
+  title: "TyroML \U0001F996"
   version: 0.2.0
 openapi: 3.0.2
 paths:
@@ -1946,6 +1966,7 @@ paths:
           description: Validation Error
       security:
       - JWTBearer: []
+      - JWTBearer: []
       summary: Deactivate Pool
       tags:
       - pool
@@ -1986,6 +2007,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
+      - JWTBearer: []
       - JWTBearer: []
       summary: Deploy Pool
       tags:
