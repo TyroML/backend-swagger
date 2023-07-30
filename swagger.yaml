@@ -1039,7 +1039,7 @@ components:
 info:
   description: Backend Service for the Tyro Platform
   title: "Tyro \U0001F996"
-  version: 0.1.0
+  version: 0.2.0
 openapi: 3.0.2
 paths:
   /:
@@ -1052,31 +1052,7 @@ paths:
               schema: {}
           description: Successful Response
       summary: Root
-  /auth:
-    get:
-      operationId: auth_auth_get
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-      summary: Auth
-      tags:
-      - login
-  /login:
-    get:
-      operationId: login_login_get
-      responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
-      summary: Login
-      tags:
-      - login
-  /mlflow-server/:
+  /api/mlflow-server/:
     get:
       description: 'Retrieves a list of mlflow server with pagination options (skip,
         limit).
@@ -1096,7 +1072,7 @@ paths:
 
 
         :return: a list of mlflow server data, where skip < mlflow_server_id < limit'
-      operationId: get_mlflow_servers_mlflow_server__get
+      operationId: get_mlflow_servers_api_mlflow_server__get
       parameters:
       - in: query
         name: skip
@@ -1121,7 +1097,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/MlflowServer'
-                title: Response Get Mlflow Servers Mlflow Server  Get
+                title: Response Get Mlflow Servers Api Mlflow Server  Get
                 type: array
           description: Successful Response
         '422':
@@ -1153,7 +1129,7 @@ paths:
 
 
         :return: the newly-inserted mlflow server record'
-      operationId: put_mlflow_server_mlflow_server__put
+      operationId: put_mlflow_server_api_mlflow_server__put
       requestBody:
         content:
           application/json:
@@ -1179,7 +1155,7 @@ paths:
       summary: Put Mlflow Server
       tags:
       - mlflow-server
-  /mlflow-server/{mlflow_server_id}:
+  /api/mlflow-server/{mlflow_server_id}:
     delete:
       description: 'Deletes the mlflow server with the specified email.
 
@@ -1195,7 +1171,7 @@ paths:
 
 
         :return: the updated mlflow server record'
-      operationId: delete_mlflow_server_mlflow_server__mlflow_server_id__delete
+      operationId: delete_mlflow_server_api_mlflow_server__mlflow_server_id__delete
       parameters:
       - in: path
         name: mlflow_server_id
@@ -1235,7 +1211,7 @@ paths:
 
 
         :return: the mlflow server data corresponding to the given ID'
-      operationId: get_mlflow_server_mlflow_server__mlflow_server_id__get
+      operationId: get_mlflow_server_api_mlflow_server__mlflow_server_id__get
       parameters:
       - in: path
         name: mlflow_server_id
@@ -1286,7 +1262,7 @@ paths:
 
 
         :return: the updated mlflow server record'
-      operationId: patch_mlflow_server_mlflow_server__mlflow_server_id__patch
+      operationId: patch_mlflow_server_api_mlflow_server__mlflow_server_id__patch
       parameters:
       - in: path
         name: mlflow_server_id
@@ -1319,7 +1295,7 @@ paths:
       summary: Patch Mlflow Server
       tags:
       - mlflow-server
-  /model/:
+  /api/model/:
     get:
       description: 'Retrieves a list of models with pagination options (skip, limit).
 
@@ -1338,7 +1314,7 @@ paths:
 
 
         :return: a list of model data, where skip < model_id < limit'
-      operationId: get_models_model__get
+      operationId: get_models_api_model__get
       parameters:
       - in: query
         name: skip
@@ -1363,7 +1339,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/ModelGet'
-                title: Response Get Models Model  Get
+                title: Response Get Models Api Model  Get
                 type: array
           description: Successful Response
         '422':
@@ -1393,7 +1369,7 @@ paths:
 
 
         :return: the newly-inserted model record'
-      operationId: put_model_model__put
+      operationId: put_model_api_model__put
       requestBody:
         content:
           application/json:
@@ -1419,7 +1395,7 @@ paths:
       summary: Put Model
       tags:
       - model
-  /model/{model_id}:
+  /api/model/{model_id}:
     delete:
       description: 'Deletes the model with the given ID.
 
@@ -1435,7 +1411,7 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: delete_model_model__model_id__delete
+      operationId: delete_model_api_model__model_id__delete
       parameters:
       - in: path
         name: model_id
@@ -1475,7 +1451,7 @@ paths:
 
 
         :return: the model data corresponding to the given ID'
-      operationId: get_model_model__model_id__get
+      operationId: get_model_api_model__model_id__get
       parameters:
       - in: path
         name: model_id
@@ -1526,7 +1502,7 @@ paths:
 
 
         :return: updated model'
-      operationId: patch_model_model__model_id__patch
+      operationId: patch_model_api_model__model_id__patch
       parameters:
       - in: path
         name: model_id
@@ -1559,7 +1535,7 @@ paths:
       summary: Patch Model
       tags:
       - model
-  /model/{model_id}/build:
+  /api/model/{model_id}/build:
     post:
       description: 'Builds container of the model with the given ID.
 
@@ -1579,7 +1555,7 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: build_model_model__model_id__build_post
+      operationId: build_model_api_model__model_id__build_post
       parameters:
       - in: path
         name: model_id
@@ -1605,7 +1581,7 @@ paths:
       summary: Build Model
       tags:
       - model
-  /model/{model_id}/deactivate:
+  /api/model/{model_id}/deactivate:
     post:
       description: 'Deactivates the model with the given ID.
 
@@ -1623,7 +1599,7 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deactivate_model_model__model_id__deactivate_post
+      operationId: deactivate_model_api_model__model_id__deactivate_post
       parameters:
       - in: path
         name: model_id
@@ -1649,7 +1625,7 @@ paths:
       summary: Deactivate Model
       tags:
       - model
-  /model/{model_id}/deploy:
+  /api/model/{model_id}/deploy:
     post:
       description: 'Activates the model with the given ID.
 
@@ -1667,7 +1643,7 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deploy_model_model__model_id__deploy_post
+      operationId: deploy_model_api_model__model_id__deploy_post
       parameters:
       - in: path
         name: model_id
@@ -1693,7 +1669,7 @@ paths:
       summary: Deploy Model
       tags:
       - model
-  /pool/:
+  /api/pool/:
     get:
       description: 'Retrieves a list of pools with pagination options (skip, limit).
 
@@ -1712,7 +1688,7 @@ paths:
 
 
         :return: a list of pool data, where skip < pool_id < limit'
-      operationId: get_pools_pool__get
+      operationId: get_pools_api_pool__get
       parameters:
       - in: query
         name: skip
@@ -1737,7 +1713,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/Pool'
-                title: Response Get Pools Pool  Get
+                title: Response Get Pools Api Pool  Get
                 type: array
           description: Successful Response
         '422':
@@ -1764,7 +1740,7 @@ paths:
 
 
         :return: the newly-inserted pool record'
-      operationId: put_pool_pool__put
+      operationId: put_pool_api_pool__put
       requestBody:
         content:
           application/json:
@@ -1790,7 +1766,7 @@ paths:
       summary: Put Pool
       tags:
       - pool
-  /pool/{pool_id}:
+  /api/pool/{pool_id}:
     delete:
       description: 'Deletes the pool with the given ID.
 
@@ -1806,7 +1782,7 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: delete_pool_pool__pool_id__delete
+      operationId: delete_pool_api_pool__pool_id__delete
       parameters:
       - in: path
         name: pool_id
@@ -1846,7 +1822,7 @@ paths:
 
 
         :return: the pool data corresponding to the given ID'
-      operationId: get_pool_pool__pool_id__get
+      operationId: get_pool_api_pool__pool_id__get
       parameters:
       - in: path
         name: pool_id
@@ -1894,7 +1870,7 @@ paths:
 
 
         :return: the updated pool record'
-      operationId: patch_pool_pool__pool_id__patch
+      operationId: patch_pool_api_pool__pool_id__patch
       parameters:
       - in: path
         name: pool_id
@@ -1927,9 +1903,9 @@ paths:
       summary: Patch Pool
       tags:
       - pool
-  /pool/{pool_id}/deactivate:
+  /api/pool/{pool_id}/deactivate:
     post:
-      description: 'Deploy the pool with the given ID.
+      description: 'Deactivates the pool with the given ID.
 
 
         :param pool_id: pool ID
@@ -1943,7 +1919,7 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deactivate_pool_pool__pool_id__deactivate_post
+      operationId: deactivate_pool_api_pool__pool_id__deactivate_post
       parameters:
       - in: path
         name: pool_id
@@ -1968,7 +1944,7 @@ paths:
       summary: Deactivate Pool
       tags:
       - pool
-  /pool/{pool_id}/deploy:
+  /api/pool/{pool_id}/deploy:
     post:
       description: 'Deploy the pool with the given ID.
 
@@ -1984,7 +1960,7 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deploy_pool_pool__pool_id__deploy_post
+      operationId: deploy_pool_api_pool__pool_id__deploy_post
       parameters:
       - in: path
         name: pool_id
@@ -2009,7 +1985,7 @@ paths:
       summary: Deploy Pool
       tags:
       - pool
-  /pool/{pool_id}/models/:
+  /api/pool/{pool_id}/models/:
     get:
       description: 'Retrieves the detailed informations about models in the pool
 
@@ -2025,7 +2001,7 @@ paths:
 
 
         :return: Detailed informations about models in the pool'
-      operationId: get_pool_models_pool__pool_id__models__get
+      operationId: get_pool_models_api_pool__pool_id__models__get
       parameters:
       - in: path
         name: pool_id
@@ -2070,7 +2046,7 @@ paths:
 
 
         :return: the updated pool record'
-      operationId: patch_pool_model_pool__pool_id__models__patch
+      operationId: patch_pool_model_api_pool__pool_id__models__patch
       parameters:
       - in: path
         name: pool_id
@@ -2105,7 +2081,7 @@ paths:
       tags:
       - pool
       - pool-models
-  /user/:
+  /api/user/:
     get:
       description: 'Retrieves a list of users with pagination options (skip, limit).
 
@@ -2119,7 +2095,7 @@ paths:
 
 
         :return: a list of user data, where skip <= user_id < limit'
-      operationId: get_users_user__get
+      operationId: get_users_api_user__get
       parameters:
       - in: query
         name: skip
@@ -2144,7 +2120,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/User'
-                title: Response Get Users User  Get
+                title: Response Get Users Api User  Get
                 type: array
           description: Successful Response
         '422':
@@ -2158,7 +2134,7 @@ paths:
       summary: Get Users
       tags:
       - user
-  /user/{user_id}:
+  /api/user/{user_id}:
     get:
       description: 'Retrieves a user with the specified ID.
 
@@ -2174,7 +2150,7 @@ paths:
 
 
         :return: the user data'
-      operationId: get_user_user__user_id__get
+      operationId: get_user_api_user__user_id__get
       parameters:
       - in: path
         name: user_id
@@ -2200,3 +2176,27 @@ paths:
       summary: Get User
       tags:
       - user
+  /auth:
+    get:
+      operationId: auth_auth_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: Auth
+      tags:
+      - login
+  /login:
+    get:
+      operationId: login_login_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: Login
+      tags:
+      - login
