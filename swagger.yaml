@@ -41,12 +41,12 @@ components:
         Sets common config for all models'
       properties:
         limit:
-          default: 1500m
+          default: 200m
           description: CPU limit
           title: Limit
           type: string
         request:
-          default: 500m
+          default: 100m
           description: CPU request
           title: Request
           type: string
@@ -79,12 +79,12 @@ components:
           - $ref: '#/components/schemas/Resources'
           default:
             cpu:
-              limit: 1500m
-              request: 500m
+              limit: 200m
+              request: 100m
               target: 80
             memory:
-              limit: 600Mi
-              request: 200Mi
+              limit: 2000Mi
+              request: 1000Mi
               target: 80
           description: Registry
           title: Resources
@@ -116,6 +116,11 @@ components:
 
         Sets common config for all models'
       properties:
+        prefix:
+          description: Pool prefix
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
+          title: Prefix
+          type: string
         routing:
           allOf:
           - $ref: '#/components/schemas/Routing'
@@ -124,7 +129,41 @@ components:
             targets: []
           description: Routing details
           title: Routing
+        tests:
+          allOf:
+          - $ref: '#/components/schemas/schemas__pool__Test'
+          default: {}
+          description: Pool tests
+          title: Tests
       title: Details
+      type: object
+    DetailsPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        prefix:
+          description: Pool prefix
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
+          title: Prefix
+          type: string
+      title: DetailsPatch
+      type: object
+    DetailsPut:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        prefix:
+          description: Pool prefix
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
+          title: Prefix
+          type: string
+      title: DetailsPut
       type: object
     HTTPValidationError:
       properties:
@@ -143,12 +182,12 @@ components:
         Sets common config for all models'
       properties:
         limit:
-          default: 600Mi
+          default: 2000Mi
           description: Memory limit
           title: Limit
           type: string
         request:
-          default: 200Mi
+          default: 1000Mi
           description: Memory request
           title: Request
           type: string
@@ -283,6 +322,7 @@ components:
           title: Meta
         name:
           description: Model name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         status:
@@ -319,12 +359,12 @@ components:
               min: 1
             resources:
               cpu:
-                limit: 1500m
-                request: 500m
+                limit: 200m
+                request: 100m
                 target: 80
               memory:
-                limit: 600Mi
-                request: 200Mi
+                limit: 2000Mi
+                request: 1000Mi
                 target: 80
           description: Deployment
           title: Deployment
@@ -338,6 +378,12 @@ components:
           default: {}
           description: Registry
           title: Registry
+        tests:
+          allOf:
+          - $ref: '#/components/schemas/schemas__model__Test'
+          default: {}
+          description: Test
+          title: Tests
       title: ModelDetails
       type: object
     ModelDetailsPatch:
@@ -375,12 +421,12 @@ components:
               min: 1
             resources:
               cpu:
-                limit: 1500m
-                request: 500m
+                limit: 200m
+                request: 100m
                 target: 80
               memory:
-                limit: 600Mi
-                request: 200Mi
+                limit: 2000Mi
+                request: 1000Mi
                 target: 80
           description: Deployment
           title: Deployment
@@ -418,6 +464,7 @@ components:
           title: Meta
         name:
           description: Model name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         status:
@@ -426,6 +473,7 @@ components:
           description: Model status
         version:
           description: Model version
+          pattern: ^\d+\.\d+\.\d+$
           title: Version
           type: string
       required:
@@ -459,12 +507,14 @@ components:
           title: Meta
         name:
           description: Model name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         version:
           description: Model version
+          pattern: ^\d+\.\d+\.\d+$
           title: Version
-          type: number
+          type: string
       title: ModelPatch
       type: object
     ModelPut:
@@ -482,21 +532,20 @@ components:
               min: 1
             resources:
               cpu:
-                limit: 1500m
-                request: 500m
+                limit: 200m
+                request: 100m
                 target: 80
               memory:
-                limit: 600Mi
-                request: 200Mi
+                limit: 2000Mi
+                request: 1000Mi
                 target: 80
           registry:
-            artifact_uri: registry_artifact_uri
+            artifact_uri: mlflow-artifacts:/0/000/artifacts/model
             id: 64b2c1b9f4b43e8e48b0d3af
         meta:
           tags:
-          - tag1
-          - tag2
-        name: model_name
+          - example
+        name: model-name
         version: 1.0.0
       properties:
         description:
@@ -513,14 +562,15 @@ components:
                 min: 1
               resources:
                 cpu:
-                  limit: 1500m
-                  request: 500m
+                  limit: 200m
+                  request: 100m
                   target: 80
                 memory:
-                  limit: 600Mi
-                  request: 200Mi
+                  limit: 2000Mi
+                  request: 1000Mi
                   target: 80
             registry: {}
+            tests: {}
           description: Model details
           title: Details
         meta:
@@ -532,6 +582,7 @@ components:
           title: Meta
         name:
           description: Model name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         version:
@@ -584,6 +635,7 @@ components:
             routing:
               shadows: []
               targets: []
+            tests: {}
           description: Pool details
           title: Details
         error:
@@ -597,6 +649,7 @@ components:
           title: Meta
         name:
           description: Pool name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         status:
@@ -626,6 +679,7 @@ components:
         - description: model_description
           model_id: '1'
           name: model_name
+          prefix: model_name
           version: 1.0.0
           weight: 50
       properties:
@@ -656,6 +710,7 @@ components:
         - model_id: '1'
         targets:
         - model_id: '1'
+          prefix: model_name
           weight: 50
       properties:
         shadows:
@@ -682,16 +737,22 @@ components:
         Sets common config for all models'
       example:
         description: pool_description
+        details:
+          prefix: pool_name
         meta:
           tags:
-          - pool_tag1
-          - pool_tag2
-        name: pool_name
+          - example
+        name: pool-name
       properties:
         description:
           description: Pool description
           title: Description
           type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/DetailsPatch'
+          description: Pool details
+          title: Details
         meta:
           allOf:
           - $ref: '#/components/schemas/schemas__pool__Meta'
@@ -699,11 +760,9 @@ components:
           title: Meta
         name:
           description: Pool name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
-      required:
-      - name
-      - description
       title: PoolPatch
       type: object
     PoolPut:
@@ -714,16 +773,23 @@ components:
         Sets common config for all models'
       example:
         description: pool_description
+        details:
+          prefix: pool_name
         meta:
           tags:
-          - pool_tag1
-          - pool_tag2
-        name: pool_name
+          - example
+        name: pool-name
       properties:
         description:
           description: Pool description
           title: Description
           type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/DetailsPut'
+          default: {}
+          description: Pool details
+          title: Details
         meta:
           allOf:
           - $ref: '#/components/schemas/schemas__pool__Meta'
@@ -733,6 +799,7 @@ components:
           title: Meta
         name:
           description: Pool name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
       required:
@@ -800,8 +867,8 @@ components:
           allOf:
           - $ref: '#/components/schemas/Cpu'
           default:
-            limit: 1500m
-            request: 500m
+            limit: 200m
+            request: 100m
             target: 80
           description: CPU details
           title: Cpu
@@ -809,8 +876,8 @@ components:
           allOf:
           - $ref: '#/components/schemas/Memory'
           default:
-            limit: 600Mi
-            request: 200Mi
+            limit: 2000Mi
+            request: 1000Mi
             target: 80
           description: Memory details
           title: Memory
@@ -922,6 +989,10 @@ components:
           description: Model name
           title: Name
           type: string
+        prefix:
+          description: Model prefix
+          title: Prefix
+          type: string
         version:
           description: Model version
           title: Version
@@ -949,6 +1020,11 @@ components:
           description: Model id
           title: Model Id
           type: string
+        prefix:
+          description: Model prefix
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
+          title: Prefix
+          type: string
         weight:
           default: 1
           description: Model weight
@@ -958,6 +1034,119 @@ components:
       required:
       - model_id
       title: TargetsModel
+      type: object
+    TestDetails:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        input:
+          default: []
+          description: Test inputs
+          items: {}
+          title: Input
+          type: array
+        lower_bound:
+          default: []
+          description: Lower bounds
+          items: {}
+          title: Lower Bound
+          type: array
+        upper_bound:
+          default: []
+          description: Upper bounds
+          items: {}
+          title: Upper Bound
+          type: array
+      title: TestDetails
+      type: object
+    TestDetailsPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        input:
+          description: Test input
+          items: {}
+          title: Input
+          type: array
+        lower_bound:
+          description: Lower bound
+          items: {}
+          title: Lower Bound
+          type: array
+        upper_bound:
+          description: Upper bound
+          items: {}
+          title: Upper Bound
+          type: array
+      title: TestDetailsPatch
+      type: object
+    TestPut:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      example:
+        description: test_description
+        details:
+          input:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          lower_bound:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          upper_bound:
+          - 1.0
+          - 2.0
+          - 3.0
+          - 4.0
+          - 5.0
+        meta:
+          tags:
+          - test_tag1
+          - test_tag2
+        name: test_name
+      properties:
+        description:
+          description: Test description
+          title: Description
+          type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/TestDetails'
+          default:
+            input: []
+            lower_bound: []
+            upper_bound: []
+          description: Test details
+          title: Details
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__test__Meta'
+          default:
+            tags: []
+          description: Test metadata
+          title: Meta
+        name:
+          description: Test name
+          title: Name
+          type: string
+      required:
+      - name
+      - description
+      title: TestPut
       type: object
     User:
       description: 'Base schema class for Pydantic models
@@ -1041,6 +1230,44 @@ components:
           type: array
       title: Meta
       type: object
+    schemas__model__Test:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        id:
+          description: Test id
+          items:
+            type: string
+          title: Id
+          type: array
+        schedule:
+          description: Test schedule
+          title: Schedule
+          type: string
+      title: Test
+      type: object
+    schemas__model__TestPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        id:
+          description: Test id
+          items:
+            type: string
+          title: Id
+          type: array
+        schedule:
+          description: Test schedule
+          title: Schedule
+          type: string
+      title: TestPatch
+      type: object
     schemas__pool__Meta:
       description: 'Base schema class for Pydantic models
 
@@ -1056,6 +1283,123 @@ components:
           title: Tags
           type: array
       title: Meta
+      type: object
+    schemas__pool__Test:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        id:
+          description: Test id
+          items:
+            type: string
+          title: Id
+          type: array
+        schedule:
+          description: Test schedule
+          title: Schedule
+          type: string
+      title: Test
+      type: object
+    schemas__pool__TestPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        id:
+          description: Test id
+          items:
+            type: string
+          title: Id
+          type: array
+        schedule:
+          description: Test schedule
+          title: Schedule
+          type: string
+      title: TestPatch
+      type: object
+    schemas__test__Meta:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        tags:
+          default: []
+          description: Test tags
+          items:
+            type: string
+          title: Tags
+          type: array
+      title: Meta
+      type: object
+    schemas__test__Test:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        _id:
+          description: Test ID
+          title: ' Id'
+          type: string
+        description:
+          description: Test description
+          title: Description
+          type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/TestDetails'
+          description: Test details
+          title: Details
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/CommonMeta'
+          description: Test metadata
+          title: Meta
+        name:
+          description: Test name
+          title: Name
+          type: string
+      required:
+      - name
+      - description
+      - details
+      - meta
+      title: Test
+      type: object
+    schemas__test__TestPatch:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        description:
+          description: Test description
+          title: Description
+          type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/TestDetailsPatch'
+          description: Test details
+          title: Details
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/schemas__test__Meta'
+          description: Test metadata
+          title: Meta
+        name:
+          description: Test name
+          title: Name
+          type: string
+      title: TestPatch
       type: object
   securitySchemes:
     JWTBearer:
@@ -1387,6 +1731,8 @@ paths:
 
         :param db: Database session
 
+        :param credentials: JWT token
+
 
         :raise HTTPException: 409 status code with "Name already registered"
 
@@ -1694,6 +2040,101 @@ paths:
       summary: Deploy Model
       tags:
       - model
+  /api/model/{model_id}/tests:
+    get:
+      description: 'Retrieves the information about the tests of a specific model
+        by ID.
+
+
+        :param model_id: model ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: the pool tests data corresponding to the given ID'
+      operationId: get_model_tests_api_model__model_id__tests_get
+      parameters:
+      - in: path
+        name: model_id
+        required: true
+        schema:
+          title: Model Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemas__model__Test'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Get Model Tests
+      tags:
+      - model
+    patch:
+      description: 'Updates the test of the given model ID.
+
+
+        :param model_id: model ID
+
+        :param test_data: the information of the new test to be created.
+
+        :param db: Database session
+
+        :param credentials: JWT token
+
+
+        :raise HTTPException: 404 status code with "Model not found!" message
+
+        if the specified model ID does not exist in the database.
+
+
+        :return: the model data corresponding to the given ID'
+      operationId: patch_model_tests_api_model__model_id__tests_patch
+      parameters:
+      - in: path
+        name: model_id
+        required: true
+        schema:
+          title: Model Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schemas__model__TestPatch'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
+      summary: Patch Model Tests
+      tags:
+      - model
   /api/pool/:
     get:
       description: 'Retrieves a list of pools with pagination options (skip, limit).
@@ -1854,7 +2295,7 @@ paths:
         required: true
         schema:
           title: Pool Id
-          type: integer
+          type: string
       responses:
         '200':
           content:
@@ -1902,7 +2343,7 @@ paths:
         required: true
         schema:
           title: Pool Id
-          type: integer
+          type: string
       requestBody:
         content:
           application/json:
@@ -2108,6 +2549,312 @@ paths:
       tags:
       - pool
       - pool-models
+  /api/pool/{pool_id}/tests:
+    get:
+      description: 'Retrieves the information about the tests of a specific pool by
+        ID.
+
+
+        :param pool_id: pool ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: the pool data corresponding to the given ID'
+      operationId: get_pool_tests_api_pool__pool_id__tests_get
+      parameters:
+      - in: path
+        name: pool_id
+        required: true
+        schema:
+          title: Pool Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemas__pool__Test'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Get Pool Tests
+      tags:
+      - pool
+    patch:
+      description: 'Updates the test of the given pool ID.
+
+
+        :param pool_id: pool ID
+
+        :param test_data: the information of the new test to be created.
+
+        :param db: Database session
+
+        :param credentials: JWT token
+
+
+        :raise HTTPException: 404 status code with "Pool not found!" message
+
+        if the specified pool ID does not exist in the database.
+
+
+        :return: the pool data corresponding to the given ID'
+      operationId: patch_pool_tests_api_pool__pool_id__tests_patch
+      parameters:
+      - in: path
+        name: pool_id
+        required: true
+        schema:
+          title: Pool Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schemas__pool__TestPatch'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pool'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
+      summary: Patch Pool Tests
+      tags:
+      - pool
+  /api/test/:
+    get:
+      operationId: get_tests_api_test__get
+      parameters:
+      - in: query
+        name: skip
+        required: false
+        schema:
+          default: 0
+          minimum: 0.0
+          title: Skip
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          minimum: 0.0
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/schemas__test__Test'
+                title: Response Get Tests Api Test  Get
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Get Tests
+      tags:
+      - test
+    put:
+      description: 'Creates a new test with the given information and returns the
+        test information.
+
+
+        :param test: test data
+
+        :param db: Database session
+
+        :param credentials: JWT token
+
+
+        :raise HTTPException: 409 status code with "Name already registered" message
+
+        if the specified test name already exists in the database.
+
+
+        :return: the newly-inserted test record'
+      operationId: put_test_api_test__put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestPut'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemas__test__Test'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
+      summary: Put Test
+      tags:
+      - test
+  /api/test/{test_id}:
+    delete:
+      description: 'Deletes a specific test by ID.
+
+
+        :param test_id: test ID
+
+        :param db: Database session
+
+
+        :raise HTTPException: 404 status code with "Test not found!" message
+
+        if the specified test ID does not exist in the database.
+
+
+        :return: the deleted test record'
+      operationId: delete_test_api_test__test_id__delete
+      parameters:
+      - in: path
+        name: test_id
+        required: true
+        schema:
+          title: Test Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Delete Test
+      tags:
+      - test
+    get:
+      operationId: get_test_api_test__test_id__get
+      parameters:
+      - in: path
+        name: test_id
+        required: true
+        schema:
+          title: Test Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemas__test__Test'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      summary: Get Test
+      tags:
+      - test
+    patch:
+      description: 'Updates the information of a specific test by ID and returns
+
+        the updated test information.
+
+
+        :param test_id: test ID
+
+        :param test: test data
+
+        :param db: Database session
+
+        :param credentials: JWT token
+
+
+        :raise HTTPException: 404 status code with "Test not found!" message
+
+        if the specified test ID does not exist in the database.
+
+        :raise HTTPException: 409 status code with "Name already registered" message
+
+        if the specified test name already exists in the database
+
+
+        :return: the updated test record'
+      operationId: patch_test_api_test__test_id__patch
+      parameters:
+      - in: path
+        name: test_id
+        required: true
+        schema:
+          title: Test Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schemas__test__TestPatch'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemas__test__Test'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - JWTBearer: []
+      - JWTBearer: []
+      summary: Patch Test
+      tags:
+      - test
   /api/user/:
     get:
       description: 'Retrieves a list of users with pagination options (skip, limit).
