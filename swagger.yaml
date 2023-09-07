@@ -218,6 +218,7 @@ components:
           title: Meta
         name:
           description: Mlflow Server name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         url:
@@ -251,6 +252,7 @@ components:
           title: Meta
         name:
           description: Mlflow Server name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         url:
@@ -280,6 +282,7 @@ components:
           title: Meta
         name:
           description: Mlflow Server name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
         url:
@@ -290,50 +293,6 @@ components:
       - name
       - url
       title: MlflowServerPut
-      type: object
-    Model:
-      description: 'Base schema class for Pydantic models
-
-        It should be used as base class for all Pydantic models
-
-        Sets common config for all models'
-      properties:
-        _id:
-          description: Model ID
-          title: ' Id'
-          type: string
-        description:
-          description: General model description
-          title: Description
-          type: string
-        meta:
-          allOf:
-          - $ref: '#/components/schemas/CommonMeta'
-          description: Model meta
-          title: Meta
-        name:
-          description: Model name
-          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
-          title: Name
-          type: string
-        tests:
-          allOf:
-          - $ref: '#/components/schemas/schemas__model__Test'
-          default: {}
-          description: Test
-          title: Tests
-        versions:
-          default: []
-          description: Model versions
-          items:
-            $ref: '#/components/schemas/ModelVersion'
-          title: Versions
-          type: array
-      required:
-      - name
-      - description
-      - meta
-      title: Model
       type: object
     ModelGet:
       description: 'Base schema class for Pydantic models
@@ -383,9 +342,7 @@ components:
         description: Model description
         meta:
           tags:
-          - tag1
-          - tag2
-          - tag3
+          - example
         name: model-1
       properties:
         description:
@@ -421,19 +378,17 @@ components:
               request: 100m
               target: 80
             memory:
-              limit: 2000Mi
-              request: 1000Mi
+              limit: 2500Mi
+              request: 1500Mi
               target: 80
-        description: Model description
+        description: model description
         meta:
           tags:
-          - tag1
-          - tag2
-          - tag3
+          - example
         name: model-1
         registry:
           artifact_uri: mlflow-artifacts:/0/000/artifacts/model
-          id: 64b2c1b9f4b43e8e48b0d3af
+          name: tyro
         version: 1.0.0
       properties:
         deployment:
@@ -591,7 +546,7 @@ components:
         description: Model version description
         registry:
           artifact_uri: mlflow-artifacts:/0/000/artifacts/model
-          id: 64b2c1b9f4b43e8e48b0d3af
+          name: tyro
         version: 1.0.0
       properties:
         deployment:
@@ -664,72 +619,6 @@ components:
       - description
       - meta
       title: Pool
-      type: object
-    PoolModelGet:
-      description: 'Base schema class for Pydantic models
-
-        It should be used as base class for all Pydantic models
-
-        Sets common config for all models'
-      example:
-        shadows:
-        - description: model_description
-          model_id: '1'
-          name: model_name
-          version: 1.0.0
-        targets:
-        - description: model_description
-          model_id: '1'
-          name: model_name
-          prefix: model_name
-          version: 1.0.0
-          weight: 50
-      properties:
-        shadows:
-          default: []
-          description: Routing shadows
-          items:
-            $ref: '#/components/schemas/ShadowsGet'
-          title: Shadows
-          type: array
-        targets:
-          default: []
-          description: Routing targets
-          items:
-            $ref: '#/components/schemas/TargetsGet'
-          title: Targets
-          type: array
-      title: PoolModelGet
-      type: object
-    PoolModelPatch:
-      description: 'Base schema class for Pydantic models
-
-        It should be used as base class for all Pydantic models
-
-        Sets common config for all models'
-      example:
-        shadows:
-        - model_id: '1'
-        targets:
-        - model_id: '1'
-          prefix: model_name
-          weight: 50
-      properties:
-        shadows:
-          default: []
-          description: Routing shadow
-          items:
-            $ref: '#/components/schemas/ShadowsModel'
-          title: Shadows
-          type: array
-        targets:
-          default: []
-          description: Routing targets
-          items:
-            $ref: '#/components/schemas/TargetsModel'
-          title: Targets
-          type: array
-      title: PoolModelPatch
       type: object
     PoolPatch:
       description: 'Base schema class for Pydantic models
@@ -831,9 +720,9 @@ components:
           description: Registry artifact uri
           title: Artifact Uri
           type: string
-        id:
-          description: Registry id
-          title: Id
+        name:
+          description: Registry name
+          title: Name
           type: string
       title: Registry
       type: object
@@ -910,10 +799,23 @@ components:
         It should be used as base class for all Pydantic models
 
         Sets common config for all models'
+      example:
+        shadows:
+        - description: model_description
+          model:
+            name: model-name
+            version: 1.0.0
+        targets:
+        - description: model_description
+          model:
+            name: model-name
+            version: 1.0.0
+          prefix: model_name
+          weight: 1
       properties:
         shadows:
           default: []
-          description: Routing shadow
+          description: Routing shadows
           items:
             $ref: '#/components/schemas/ShadowsModel'
           title: Shadows
@@ -927,36 +829,6 @@ components:
           type: array
       title: Routing
       type: object
-    ShadowsGet:
-      description: 'Base schema class for Pydantic models
-
-        It should be used as base class for all Pydantic models
-
-        Sets common config for all models'
-      properties:
-        description:
-          description: Model description
-          title: Description
-          type: string
-        model_id:
-          description: Model ID
-          title: Model Id
-          type: string
-        name:
-          description: Model name
-          title: Name
-          type: string
-        version:
-          description: Model version
-          title: Version
-          type: string
-      required:
-      - name
-      - version
-      - description
-      - model_id
-      title: ShadowsGet
-      type: object
     ShadowsModel:
       description: 'Base schema class for Pydantic models
 
@@ -964,52 +836,19 @@ components:
 
         Sets common config for all models'
       properties:
-        model_id:
-          description: Model id
-          title: Model Id
-          type: string
-      required:
-      - model_id
-      title: ShadowsModel
-      type: object
-    TargetsGet:
-      description: 'Base schema class for Pydantic models
-
-        It should be used as base class for all Pydantic models
-
-        Sets common config for all models'
-      properties:
         description:
           description: Model description
           title: Description
           type: string
-        model_id:
-          description: Model ID
-          title: Model Id
-          type: string
-        name:
-          description: Model name
-          title: Name
-          type: string
-        prefix:
-          description: Model prefix
-          title: Prefix
-          type: string
-        version:
-          description: Model version
-          title: Version
-          type: string
-        weight:
-          description: Model weight
-          title: Weight
-          type: integer
+        model:
+          allOf:
+          - $ref: '#/components/schemas/schemas__pool__Model'
+          description: Model
+          title: Model
       required:
-      - name
-      - version
+      - model
       - description
-      - model_id
-      - weight
-      title: TargetsGet
+      title: ShadowsModel
       type: object
     TargetsModel:
       description: 'Base schema class for Pydantic models
@@ -1018,10 +857,15 @@ components:
 
         Sets common config for all models'
       properties:
-        model_id:
-          description: Model id
-          title: Model Id
+        description:
+          description: Model description
+          title: Description
           type: string
+        model:
+          allOf:
+          - $ref: '#/components/schemas/schemas__pool__Model'
+          description: Model
+          title: Model
         prefix:
           description: Model prefix
           pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
@@ -1034,7 +878,8 @@ components:
           title: Weight
           type: integer
       required:
-      - model_id
+      - model
+      - description
       title: TargetsModel
       type: object
     TestDetails:
@@ -1117,8 +962,7 @@ components:
           - 5.0
         meta:
           tags:
-          - test_tag1
-          - test_tag2
+          - example
         name: test_name
       properties:
         description:
@@ -1175,9 +1019,9 @@ components:
           title: Surname
           type: string
       required:
+      - email
       - name
       - surname
-      - email
       title: User
       type: object
     ValidationError:
@@ -1232,6 +1076,50 @@ components:
           type: array
       title: Meta
       type: object
+    schemas__model__Model:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        _id:
+          description: Model ID
+          title: ' Id'
+          type: string
+        description:
+          description: General model description
+          title: Description
+          type: string
+        meta:
+          allOf:
+          - $ref: '#/components/schemas/CommonMeta'
+          description: Model meta
+          title: Meta
+        name:
+          description: Model name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
+          title: Name
+          type: string
+        tests:
+          allOf:
+          - $ref: '#/components/schemas/schemas__model__Test'
+          default: {}
+          description: Test
+          title: Tests
+        versions:
+          default: []
+          description: Model versions
+          items:
+            $ref: '#/components/schemas/ModelVersion'
+          title: Versions
+          type: array
+      required:
+      - name
+      - description
+      - meta
+      title: Model
+      type: object
     schemas__model__Test:
       description: 'Base schema class for Pydantic models
 
@@ -1285,6 +1173,28 @@ components:
           title: Tags
           type: array
       title: Meta
+      type: object
+    schemas__pool__Model:
+      description: 'Base schema class for Pydantic models
+
+        It should be used as base class for all Pydantic models
+
+        Sets common config for all models'
+      properties:
+        name:
+          description: Model name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
+          title: Name
+          type: string
+        version:
+          description: Model version
+          pattern: ^\d+\.\d+\.\d+$
+          title: Version
+          type: string
+      required:
+      - name
+      - version
+      title: Model
       type: object
     schemas__pool__Test:
       description: 'Base schema class for Pydantic models
@@ -1367,6 +1277,7 @@ components:
           title: Meta
         name:
           description: Test name
+          pattern: ^[a-z][a-z0-9-]+[a-z0-9]$
           title: Name
           type: string
       required:
@@ -1526,7 +1437,7 @@ paths:
       summary: Put Mlflow Server
       tags:
       - mlflow-server
-  /api/mlflow-server/{mlflow_server_id}:
+  /api/mlflow-server/{name}:
     delete:
       description: 'Deletes the mlflow server with the specified email.
 
@@ -1542,13 +1453,13 @@ paths:
 
 
         :return: the updated mlflow server record'
-      operationId: delete_mlflow_server_api_mlflow_server__mlflow_server_id__delete
+      operationId: delete_mlflow_server_api_mlflow_server__name__delete
       parameters:
       - in: path
-        name: mlflow_server_id
+        name: name
         required: true
         schema:
-          title: Mlflow Server Id
+          title: Name
           type: string
       responses:
         '200':
@@ -1582,13 +1493,13 @@ paths:
 
 
         :return: the mlflow server data corresponding to the given ID'
-      operationId: get_mlflow_server_api_mlflow_server__mlflow_server_id__get
+      operationId: get_mlflow_server_api_mlflow_server__name__get
       parameters:
       - in: path
-        name: mlflow_server_id
+        name: name
         required: true
         schema:
-          title: Mlflow Server Id
+          title: Name
           type: string
       responses:
         '200':
@@ -1633,13 +1544,13 @@ paths:
 
 
         :return: the updated mlflow server record'
-      operationId: patch_mlflow_server_api_mlflow_server__mlflow_server_id__patch
+      operationId: patch_mlflow_server_api_mlflow_server__name__patch
       parameters:
       - in: path
-        name: mlflow_server_id
+        name: name
         required: true
         schema:
-          title: Mlflow Server Id
+          title: Name
           type: string
       requestBody:
         content:
@@ -1754,7 +1665,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model'
+                $ref: '#/components/schemas/schemas__model__Model'
           description: Successful Response
         '422':
           content:
@@ -1768,7 +1679,7 @@ paths:
       summary: Put Model
       tags:
       - model
-  /api/model/{model_id}:
+  /api/model/{name}:
     delete:
       description: 'Deletes the model with the given ID.
 
@@ -1784,13 +1695,13 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: delete_model_api_model__model_id__delete
+      operationId: delete_model_api_model__name__delete
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       responses:
         '200':
@@ -1810,10 +1721,10 @@ paths:
       tags:
       - model
     get:
-      description: 'Retrieves the information of a specific model by ID.
+      description: 'Retrieves the information of a specific model by name.
 
 
-        :param model_id: model ID
+        :param name: model name
 
         :param db: Database session
 
@@ -1824,20 +1735,20 @@ paths:
 
 
         :return: the model data corresponding to the given ID'
-      operationId: get_model_api_model__model_id__get
+      operationId: get_model_api_model__name__get
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model'
+                $ref: '#/components/schemas/schemas__model__Model'
           description: Successful Response
         '422':
           content:
@@ -1851,7 +1762,7 @@ paths:
       tags:
       - model
     patch:
-      description: 'Allows updating a model by it''s id
+      description: 'Allows updating a model by its name
 
 
         :param model_id: id of model to update
@@ -1875,13 +1786,13 @@ paths:
 
 
         :return: updated model'
-      operationId: patch_model_api_model__model_id__patch
+      operationId: patch_model_api_model__name__patch
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       requestBody:
         content:
@@ -1894,7 +1805,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model'
+                $ref: '#/components/schemas/schemas__model__Model'
           description: Successful Response
         '422':
           content:
@@ -1908,7 +1819,7 @@ paths:
       summary: Patch Model
       tags:
       - model
-  /api/model/{model_id}/tests:
+  /api/model/{name}/tests:
     get:
       description: 'Retrieves the information about the tests of a specific model
         by ID.
@@ -1925,13 +1836,13 @@ paths:
 
 
         :return: the pool tests data corresponding to the given ID'
-      operationId: get_model_tests_api_model__model_id__tests_get
+      operationId: get_model_tests_api_model__name__tests_get
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       responses:
         '200':
@@ -1970,13 +1881,13 @@ paths:
 
 
         :return: the model data corresponding to the given ID'
-      operationId: patch_model_tests_api_model__model_id__tests_patch
+      operationId: patch_model_tests_api_model__name__tests_patch
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       requestBody:
         content:
@@ -1989,7 +1900,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model'
+                $ref: '#/components/schemas/schemas__model__Model'
           description: Successful Response
         '422':
           content:
@@ -2003,7 +1914,7 @@ paths:
       summary: Patch Model Tests
       tags:
       - model
-  /api/model/{model_id}/{version}:
+  /api/model/{name}/{version}:
     delete:
       description: 'Deletes the model version
 
@@ -2021,19 +1932,18 @@ paths:
 
 
         :return: a json with a detail key indicating success'
-      operationId: delete_model_version_api_model__model_id___version__delete
+      operationId: delete_model_version_api_model__name___version__delete
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       - in: path
         name: version
         required: true
         schema:
-          pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
           title: Version
           type: string
       responses:
@@ -2080,19 +1990,18 @@ paths:
 
 
         :return: updated model'
-      operationId: patch_model_version_api_model__model_id___version__patch
+      operationId: patch_model_version_api_model__name___version__patch
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       - in: path
         name: version
         required: true
         schema:
-          pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
           title: Version
           type: string
       requestBody:
@@ -2106,7 +2015,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model'
+                $ref: '#/components/schemas/schemas__model__Model'
           description: Successful Response
         '422':
           content:
@@ -2120,7 +2029,7 @@ paths:
       summary: Patch Model Version
       tags:
       - model
-  /api/model/{model_id}/{version}/build:
+  /api/model/{name}/{version}/build:
     post:
       description: 'Builds container of the model with the given ID.
 
@@ -2140,19 +2049,18 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: build_model_api_model__model_id___version__build_post
+      operationId: build_model_api_model__name___version__build_post
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       - in: path
         name: version
         required: true
         schema:
-          pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
           title: Version
           type: string
       responses:
@@ -2173,12 +2081,12 @@ paths:
       summary: Build Model
       tags:
       - model
-  /api/model/{model_id}/{version}/deactivate:
+  /api/model/{name}/{version}/deactivate:
     post:
-      description: 'Deactivates the model with the given ID.
+      description: 'Deactivates the model with the given name and version.
 
 
-        :param model_id: model ID
+        :param name: model name
 
         :param db: Database session
 
@@ -2191,19 +2099,18 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deactivate_model_api_model__model_id___version__deactivate_post
+      operationId: deactivate_model_api_model__name___version__deactivate_post
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       - in: path
         name: version
         required: true
         schema:
-          pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
           title: Version
           type: string
       responses:
@@ -2224,12 +2131,12 @@ paths:
       summary: Deactivate Model
       tags:
       - model
-  /api/model/{model_id}/{version}/deploy:
+  /api/model/{name}/{version}/deploy:
     post:
       description: 'Activates the model with the given ID.
 
 
-        :param model_id: model ID
+        :param name: model name
 
         :param version: model version
 
@@ -2242,19 +2149,18 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deploy_model_api_model__model_id___version__deploy_post
+      operationId: deploy_model_api_model__name___version__deploy_post
       parameters:
       - in: path
-        name: model_id
+        name: name
         required: true
         schema:
-          title: Model Id
+          title: Name
           type: string
       - in: path
         name: version
         required: true
         schema:
-          pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
           title: Version
           type: string
       responses:
@@ -2372,7 +2278,7 @@ paths:
       summary: Put Pool
       tags:
       - pool
-  /api/pool/{pool_id}:
+  /api/pool/{name}:
     delete:
       description: 'Deletes the pool with the given ID.
 
@@ -2388,13 +2294,13 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: delete_pool_api_pool__pool_id__delete
+      operationId: delete_pool_api_pool__name__delete
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       responses:
         '200':
@@ -2428,13 +2334,13 @@ paths:
 
 
         :return: the pool data corresponding to the given ID'
-      operationId: get_pool_api_pool__pool_id__get
+      operationId: get_pool_api_pool__name__get
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       responses:
         '200':
@@ -2476,13 +2382,13 @@ paths:
 
 
         :return: the updated pool record'
-      operationId: patch_pool_api_pool__pool_id__patch
+      operationId: patch_pool_api_pool__name__patch
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       requestBody:
         content:
@@ -2509,7 +2415,7 @@ paths:
       summary: Patch Pool
       tags:
       - pool
-  /api/pool/{pool_id}/deactivate:
+  /api/pool/{name}/deactivate:
     post:
       description: 'Deactivates the pool with the given ID.
 
@@ -2525,13 +2431,13 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deactivate_pool_api_pool__pool_id__deactivate_post
+      operationId: deactivate_pool_api_pool__name__deactivate_post
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       responses:
         '200':
@@ -2551,7 +2457,7 @@ paths:
       summary: Deactivate Pool
       tags:
       - pool
-  /api/pool/{pool_id}/deploy:
+  /api/pool/{name}/deploy:
     post:
       description: 'Deploy the pool with the given ID.
 
@@ -2567,13 +2473,13 @@ paths:
 
 
         :return: a json with a "detail" key indicating success'
-      operationId: deploy_pool_api_pool__pool_id__deploy_post
+      operationId: deploy_pool_api_pool__name__deploy_post
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       responses:
         '200':
@@ -2593,7 +2499,7 @@ paths:
       summary: Deploy Pool
       tags:
       - pool
-  /api/pool/{pool_id}/models/:
+  /api/pool/{name}/models/:
     get:
       description: 'Retrieves the detailed informations about models in the pool
 
@@ -2609,20 +2515,20 @@ paths:
 
 
         :return: Detailed informations about models in the pool'
-      operationId: get_pool_models_api_pool__pool_id__models__get
+      operationId: get_pool_models_api_pool__name__models__get
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PoolModelGet'
+                $ref: '#/components/schemas/Routing'
           description: Successful Response
         '422':
           content:
@@ -2654,19 +2560,19 @@ paths:
 
 
         :return: the updated pool record'
-      operationId: patch_pool_model_api_pool__pool_id__models__patch
+      operationId: patch_pool_model_api_pool__name__models__patch
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PoolModelPatch'
+              $ref: '#/components/schemas/Routing'
         required: true
       responses:
         '200':
@@ -2689,7 +2595,7 @@ paths:
       tags:
       - pool
       - pool-models
-  /api/pool/{pool_id}/tests:
+  /api/pool/{name}/tests:
     get:
       description: 'Retrieves the information about the tests of a specific pool by
         ID.
@@ -2706,13 +2612,13 @@ paths:
 
 
         :return: the pool data corresponding to the given ID'
-      operationId: get_pool_tests_api_pool__pool_id__tests_get
+      operationId: get_pool_tests_api_pool__name__tests_get
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       responses:
         '200':
@@ -2751,13 +2657,13 @@ paths:
 
 
         :return: the pool data corresponding to the given ID'
-      operationId: patch_pool_tests_api_pool__pool_id__tests_patch
+      operationId: patch_pool_tests_api_pool__name__tests_patch
       parameters:
       - in: path
-        name: pool_id
+        name: name
         required: true
         schema:
-          title: Pool Id
+          title: Name
           type: string
       requestBody:
         content:
@@ -2869,7 +2775,7 @@ paths:
       summary: Put Test
       tags:
       - test
-  /api/test/{test_id}:
+  /api/test/{name}:
     delete:
       description: 'Deletes a specific test by ID.
 
@@ -2885,13 +2791,13 @@ paths:
 
 
         :return: the deleted test record'
-      operationId: delete_test_api_test__test_id__delete
+      operationId: delete_test_api_test__name__delete
       parameters:
       - in: path
-        name: test_id
+        name: name
         required: true
         schema:
-          title: Test Id
+          title: Name
           type: string
       responses:
         '200':
@@ -2911,13 +2817,13 @@ paths:
       tags:
       - test
     get:
-      operationId: get_test_api_test__test_id__get
+      operationId: get_test_api_test__name__get
       parameters:
       - in: path
-        name: test_id
+        name: name
         required: true
         schema:
-          title: Test Id
+          title: Name
           type: string
       responses:
         '200':
@@ -2962,13 +2868,13 @@ paths:
 
 
         :return: the updated test record'
-      operationId: patch_test_api_test__test_id__patch
+      operationId: patch_test_api_test__name__patch
       parameters:
       - in: path
-        name: test_id
+        name: name
         required: true
         schema:
-          title: Test Id
+          title: Name
           type: string
       requestBody:
         content:
@@ -3048,7 +2954,7 @@ paths:
       summary: Get Users
       tags:
       - user
-  /api/user/{user_id}:
+  /api/user/{email}:
     get:
       description: 'Retrieves a user with the specified ID.
 
@@ -3064,13 +2970,13 @@ paths:
 
 
         :return: the user data'
-      operationId: get_user_api_user__user_id__get
+      operationId: get_user_api_user__email__get
       parameters:
       - in: path
-        name: user_id
+        name: email
         required: true
         schema:
-          title: User Id
+          title: Email
           type: string
       responses:
         '200':
