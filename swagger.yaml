@@ -10,6 +10,7 @@ components:
           type: string
         created_by:
           description: Created by
+          format: email
           title: Created By
           type: string
         tags:
@@ -26,6 +27,7 @@ components:
           type: string
         updated_by:
           description: Updated by
+          format: email
           title: Updated By
           type: string
       required:
